@@ -41,6 +41,11 @@ public class PlayerGridMovement : MonoBehaviour
         }
     }
 
+    public Vector2 GetCurrentDirection()
+    {
+        return moveDirection;
+    }
+
     void HandleInput()
     {
         float x = Input.GetAxisRaw("Horizontal");
