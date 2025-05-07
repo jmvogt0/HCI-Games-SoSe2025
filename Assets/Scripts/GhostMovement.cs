@@ -10,7 +10,6 @@ public class GhostMovement : MonoBehaviour
     public float tunnelSpeed = 3f;
     
     public Tilemap wallTilemap;
-
     public enum GhostMode { Random, Blinky, Pinky, Inky, Clyde }
     public GhostMode mode = GhostMode.Random;
 

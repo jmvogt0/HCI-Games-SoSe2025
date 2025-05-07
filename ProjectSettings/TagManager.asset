@@ -8,6 +8,7 @@ TagManager:
   - TeleportLeft
   - TeleportRight
   - Ghost
+  - TunnelZone
   layers:
   - Default
   - TransparentFX

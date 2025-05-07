@@ -1,100 +1,103 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-
 using Newtonsoft.Json.Linq;
 using NativeWebSocket;
 
-public class hyperateSocket : MonoBehaviour
+public class HyperateSocket : MonoBehaviour
 {
-	// Put your websocket Token ID here
-    public string websocketToken = "<Request your Websocket Token>"; //You don't have one, get it here https://www.hyperate.io/api
-    public string hyperateID = "internal-testing";
-	// Textbox to display your heart rate in
-    Text textBox;
-	// Websocket for connection with Hyperate
-    WebSocket websocket;
+    [Header("Hyperate Settings")]
+    [Tooltip("Token von https://www.hyperate.io/api")]
+    public string websocketToken = "xQ1Ekhd0tJOxUAWFIYQ5lqXCOzClnuG7iIMMtX8gudtAaJ6GCAYAtu2HWAqQH0V1";
+    public string hyperateID = "79E0";
+
+
+    [Header("References")]
+    public HeartRateBaselineRecorder recorder;  // Im Inspector belegen!
+
+    private WebSocket websocket;
+
+    void Awake()
+    {
+        DontDestroyOnLoad(this.gameObject);
+    }
     async void Start()
     {
-        textBox = GetComponent<Text>();
+        // Fallback, falls du die Referenz nicht im Inspector gesetzt hast
+        if (recorder == null)
+            recorder = FindObjectOfType<HeartRateBaselineRecorder>();
 
-        websocket = new WebSocket("wss://app.hyperate.io/socket/websocket?token=" + websocketToken);
-        Debug.Log("Connect!");
+        if (recorder == null)
+        {
+            Debug.LogError("Kein HeartRateBaselineRecorder gefunden! Bitte im Inspector zuweisen.");
+            return;
+        }
+
+        websocket = new WebSocket($"wss://app.hyperate.io/socket/websocket?token={websocketToken}");
 
         websocket.OnOpen += () =>
         {
-            Debug.Log("Connection open!");
+            Debug.Log("WebSocket geöffnet");
             SendWebSocketMessage();
         };
-
         websocket.OnError += (e) =>
         {
-            Debug.Log("Error! " + e);
+            Debug.LogError("WebSocket-Fehler: " + e);
         };
-
         websocket.OnClose += (e) =>
         {
-            Debug.Log("Connection closed!");
+            Debug.Log("WebSocket geschlossen");
         };
+        websocket.OnMessage += OnWebSocketMessage;
 
-        websocket.OnMessage += (bytes) =>
-        {
-        // getting the message as a string
-            var message = System.Text.Encoding.UTF8.GetString(bytes);
-            var msg = JObject.Parse(message);
+        InvokeRepeating(nameof(SendHeartbeat), 1f, 25f);
 
-            if (msg["event"].ToString() == "hr_update")
-            {
-                // Change textbox text into the newly received Heart Rate (integer like "86" which represents beats per minute)
-                textBox.text = (string) msg["payload"]["hr"];
-            }
-        };
-
-        // Send heartbeat message every 25seconds in order to not suspended the connection
-        InvokeRepeating("SendHeartbeat", 1.0f, 25.0f);
-
-        // waiting for messages
         await websocket.Connect();
     }
 
-    void Update()
+    private void OnWebSocketMessage(byte[] bytes)
     {
-#if !UNITY_WEBGL || UNITY_EDITOR
-        websocket.DispatchMessageQueue();
-#endif
+        var json = System.Text.Encoding.UTF8.GetString(bytes);
+        var msg = JObject.Parse(json);
+
+        if (msg["event"]?.ToString() == "hr_update")
+        {
+            int bpm = System.Convert.ToInt32(msg["payload"]?["hr"] ?? 0);
+            Debug.Log($"HR Update: {bpm} BPM");
+
+            // Aktuelle HR global speichern
+            if (HeartRateManager.Instance != null)
+                HeartRateManager.Instance.UpdateHR(bpm);
+
+            // Wenn BaselineRecorder aktiv ist
+            if (recorder != null)
+                recorder.OnHeartRateReceived(bpm);
+        }
     }
 
     async void SendWebSocketMessage()
     {
         if (websocket.State == WebSocketState.Open)
-        {
-            // Log into the "internal-testing" channel
-            await websocket.SendText("{\"topic\": \"hr:"+hyperateID+"\", \"event\": \"phx_join\", \"payload\": {}, \"ref\": 0}");
-        }
+            await websocket.SendText($"{{\"topic\":\"hr:{hyperateID}\",\"event\":\"phx_join\",\"payload\":{{}},\"ref\":0}}");
     }
+
     async void SendHeartbeat()
     {
         if (websocket.State == WebSocketState.Open)
-        {
-            // Send heartbeat message in order to not be suspended from the connection
-            await websocket.SendText("{\"topic\": \"phoenix\",\"event\": \"heartbeat\",\"payload\": {},\"ref\": 0}");
+            await websocket.SendText("{\"topic\":\"phoenix\",\"event\":\"heartbeat\",\"payload\":{},\"ref\":0}");
+    }
 
+    void Update()
+    {
+#if !UNITY_WEBGL || UNITY_EDITOR
+        if (websocket != null)
+        {
+            websocket.DispatchMessageQueue();
         }
+#endif
     }
 
     private async void OnApplicationQuit()
     {
         await websocket.Close();
     }
-
-}
-
-public class HyperateResponse
-{
-    public string Event { get; set; }
-    public string Payload { get; set; }
-    public string Ref { get; set; }
-    public string Topic { get; set; }
 }
