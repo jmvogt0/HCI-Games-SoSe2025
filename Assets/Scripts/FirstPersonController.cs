@@ -22,6 +22,8 @@ public class FirstPersonGridMovement : MonoBehaviour
 
   void Update()
   {
+    UpdateMoveSpeedFromHeartRate();
+    Debug.Log("MoveSpeed: " + moveSpeed);
     if (!isMoving && !isRotating)
     {
       if (pendingTurn != 0)
@@ -56,7 +58,7 @@ public class FirstPersonGridMovement : MonoBehaviour
 
     if (isMoving)
     {
-      transform.position = Vector3.MoveTowards(transform.position, targetPos, (moveSpeed * 0.3f) * Time.deltaTime);
+      transform.position = Vector3.MoveTowards(transform.position, targetPos, (moveSpeed) * Time.deltaTime);
       if (Vector3.Distance(transform.position, targetPos) < 0.01f)
       {
         transform.position = targetPos;
@@ -146,4 +148,18 @@ public class FirstPersonGridMovement : MonoBehaviour
     else
       return new Vector3(0, 0, Mathf.Sign(d.z));
   }
+
+  void UpdateMoveSpeedFromHeartRate()
+    {
+        if (HeartRateManager.Instance == null)
+            return;
+
+        float hrr = HeartRateManager.Instance.GetHRRPercent(); // 0–1
+
+        // Beispiel: Linearer Mapping zwischen 3 (langsam) und 8 (schnell)
+        float minSpeed = 1f;
+        float maxSpeed = 5f;
+
+        moveSpeed = Mathf.Lerp(minSpeed, maxSpeed, hrr);
+    }
 }

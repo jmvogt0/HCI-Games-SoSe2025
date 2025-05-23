@@ -60,6 +60,6 @@ public class HeartRateBaselineRecorder : MonoBehaviour
         Debug.Log("Herzfrequenz-Baseline (Median): " + median);
         PlayerPrefs.SetInt("HR_Baseline", median); // für späteren Zugriff im Spiel
 
-        SceneManager.LoadScene("GameScene"); // oder beliebige Szene
+        SceneManager.LoadScene("3DGameScene"); // oder beliebige Szene
     }
 }
