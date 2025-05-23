@@ -18,6 +18,7 @@ public class PlayerGridMovement : MonoBehaviour
 
     void Update()
     {
+        UpdateMoveSpeedFromHeartRate();
         HandleInput();
 
         if (!isMoving)
@@ -138,6 +139,20 @@ public class PlayerGridMovement : MonoBehaviour
     {
         Vector3Int gridPos = wallTilemap.WorldToCell(transform.position + (Vector3)dir);
         return !wallTilemap.HasTile(gridPos);
+    }
+
+    void UpdateMoveSpeedFromHeartRate()
+    {
+        if (HeartRateManager.Instance == null)
+            return;
+
+        float hrr = HeartRateManager.Instance.GetHRRPercent(); // 0–1
+
+        // Beispiel: Linearer Mapping zwischen 3 (langsam) und 8 (schnell)
+        float minSpeed = 3f;
+        float maxSpeed = 8f;
+
+        moveSpeed = Mathf.Lerp(minSpeed, maxSpeed, hrr);
     }
 
     public void StopMovement()

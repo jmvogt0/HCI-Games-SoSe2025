@@ -421,7 +421,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hrText: {fileID: 1519635136}
   timerText: {fileID: 64955638}
-  recordDuration: 30
+  recordDuration: 10
 --- !u!4 &392561670
 Transform:
   m_ObjectHideFlags: 0
