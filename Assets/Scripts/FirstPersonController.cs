@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class FirstPersonGridMovement : MonoBehaviour
 {
@@ -21,7 +22,6 @@ public class FirstPersonGridMovement : MonoBehaviour
 
   void Update()
   {
-    Debug.Log("Update - Checking for pending turn: " + pendingTurn);
     if (!isMoving && !isRotating)
     {
       if (pendingTurn != 0)
@@ -30,10 +30,8 @@ public class FirstPersonGridMovement : MonoBehaviour
         checkDir.y = 0;
         Vector3 checkOrigin = transform.position + Vector3.up * 0.3f;
         bool blocked = Physics.Raycast(checkOrigin, checkDir, gridSize + 0.1f);
-        Debug.Log("Trying to turn. Direction: " + checkDir + ", Ray hit: " + blocked);
         if (!blocked)
         {
-          Debug.Log("Turning " + (pendingTurn == -1 ? "left" : "right"));
           targetRotation *= Quaternion.Euler(0, pendingTurn * rotationAngle, 0);
           isRotating = true;
           pendingTurn = 0;
@@ -94,16 +92,47 @@ public class FirstPersonGridMovement : MonoBehaviour
       pendingTurn = 1;
     }
 
-    float horizontalInput = Input.GetAxis("Horizontal");
+    float horizontalInput = Input.GetAxis("Horizontal"); // alte Eingabe
     if (horizontalInput < -0.5f)
     {
-      Debug.Log("Controller Left - Pending turn set to -1");
+      Debug.Log("Keyboard/Legacy Controller Left - Pending turn set to -1");
       pendingTurn = -1;
     }
     else if (horizontalInput > 0.5f)
     {
-      Debug.Log("Controller Right - Pending turn set to 1");
+      Debug.Log("Keyboard/Legacy Controller Right - Pending turn set to 1");
       pendingTurn = 1;
+    }
+
+    /*
+    if (Gamepad.current != null)
+    {
+      float stickX = Gamepad.current.leftStick.x.ReadValue();
+      if (stickX < -0.5f)
+      {
+        Debug.Log("Gamepad Left - Pending turn set to -1");
+        pendingTurn = -1;
+      }
+      else if (stickX > 0.5f)
+      {
+        Debug.Log("Gamepad Right - Pending turn set to 1");
+        pendingTurn = 1;
+      }
+    }
+    */
+
+    if (Keyboard.current != null)
+    {
+      if (Keyboard.current.leftArrowKey.wasPressedThisFrame)
+      {
+        Debug.Log("Controller/Keyboard Left Arrow - Pending turn set to -1");
+        pendingTurn = -1;
+      }
+      else if (Keyboard.current.rightArrowKey.wasPressedThisFrame)
+      {
+        Debug.Log("Controller/Keyboard Right Arrow - Pending turn set to 1");
+        pendingTurn = 1;
+      }
     }
 
     // Bewegung erfolgt automatisch → kein Code hier notwendig
