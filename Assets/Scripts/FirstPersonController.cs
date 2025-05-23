@@ -10,6 +10,7 @@ public class FirstPersonGridMovement : MonoBehaviour
   public float rotationAngle = 90f; // Drehung pro Tastendruck in Grad
   private Quaternion targetRotation; // Zielrotation
   private bool isRotating = false;
+  private int pendingTurn = 0; // -1 = links, 1 = rechts, 0 = keine
 
   void Start()
   {
@@ -20,11 +21,44 @@ public class FirstPersonGridMovement : MonoBehaviour
 
   void Update()
   {
+    Debug.Log("Update - Checking for pending turn: " + pendingTurn);
+    if (!isMoving && !isRotating)
+    {
+      if (pendingTurn != 0)
+      {
+        Vector3 checkDir = RoundToGrid(Quaternion.Euler(0, pendingTurn * rotationAngle, 0) * transform.forward);
+        checkDir.y = 0;
+        Vector3 checkOrigin = transform.position + Vector3.up * 0.3f;
+        bool blocked = Physics.Raycast(checkOrigin, checkDir, gridSize + 0.1f);
+        Debug.Log("Trying to turn. Direction: " + checkDir + ", Ray hit: " + blocked);
+        if (!blocked)
+        {
+          Debug.Log("Turning " + (pendingTurn == -1 ? "left" : "right"));
+          targetRotation *= Quaternion.Euler(0, pendingTurn * rotationAngle, 0);
+          isRotating = true;
+          pendingTurn = 0;
+          return; // nach Drehung in diesem Frame keine Vorwärtsbewegung
+        }
+      }
+
+      Vector3 direction = RoundToGrid(transform.forward);
+      direction.y = 0;
+      Vector3 destination = transform.position + direction * gridSize;
+
+      Vector3 rayOrigin = transform.position + Vector3.up * 0.3f;
+      bool hit = Physics.Raycast(rayOrigin, direction, gridSize + 0.1f);
+      if (!hit)
+      {
+        targetPos = destination;
+        isMoving = true;
+      }
+    }
+
     HandleInput();
 
     if (isMoving)
     {
-      transform.position = Vector3.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
+      transform.position = Vector3.MoveTowards(transform.position, targetPos, (moveSpeed * 0.3f) * Time.deltaTime);
       if (Vector3.Distance(transform.position, targetPos) < 0.01f)
       {
         transform.position = targetPos;
@@ -45,48 +79,34 @@ public class FirstPersonGridMovement : MonoBehaviour
 
   void HandleInput()
   {
-    if (isMoving || isRotating) return;
+    //if (isMoving || isRotating) return;
 
     // --- Rotation ---
     if (Input.GetKeyDown(KeyCode.A))
     {
-      targetRotation *= Quaternion.Euler(0, -rotationAngle, 0);
-      isRotating = true;
-      return; // ← Drehung hat Priorität, danach keine Bewegung
+      Debug.Log("Input A - Pending turn set to -1");
+      pendingTurn = -1;
     }
 
     if (Input.GetKeyDown(KeyCode.D))
     {
-      targetRotation *= Quaternion.Euler(0, rotationAngle, 0);
-      isRotating = true;
-      return;
+      Debug.Log("Input D - Pending turn set to 1");
+      pendingTurn = 1;
     }
 
-    // --- Bewegung ---
-    Vector3 direction = Vector3.zero;
-
-    if (Input.GetKeyDown(KeyCode.W)) direction = transform.forward;
-    else if (Input.GetKeyDown(KeyCode.S)) direction = -transform.forward;
-    else return; // ← Kein Bewegungsinput → abbrechen
-
-    direction = RoundToGrid(direction);
-    direction.y = 0;
-
-    if (direction != Vector3.zero)
+    float horizontalInput = Input.GetAxis("Horizontal");
+    if (horizontalInput < -0.5f)
     {
-      Vector3 destination = transform.position + direction * gridSize;
-
-      Vector3 rayOrigin = transform.position + Vector3.up * 0.3f;
-      //Debug.DrawRay(rayOrigin, direction * (gridSize + 0.3f), Color.red, 5f);
-      bool hit = Physics.Raycast(rayOrigin, direction, gridSize + 0.1f);
-      //Debug.Log("Raycast hit wall: " + hit);
-      if (!hit)
-      {
-        targetPos = destination;
-        isMoving = true;
-      }
+      Debug.Log("Controller Left - Pending turn set to -1");
+      pendingTurn = -1;
+    }
+    else if (horizontalInput > 0.5f)
+    {
+      Debug.Log("Controller Right - Pending turn set to 1");
+      pendingTurn = 1;
     }
 
+    // Bewegung erfolgt automatisch → kein Code hier notwendig
   }
 
   Vector3 RoundToGrid(Vector3 dir)
