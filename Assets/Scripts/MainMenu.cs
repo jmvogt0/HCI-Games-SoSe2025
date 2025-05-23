@@ -6,7 +6,8 @@ public class MainMenu : MonoBehaviour
     public void StartGame()
     {
         Debug.Log("Spiel gestartet.");
-        SceneManager.LoadScene("HeartRateBaseline");
+        //SceneManager.LoadScene("HeartRateBaseline");
+        SceneManager.LoadScene("3DGameScene");
     }
 
     public void QuitGame()
