@@ -1,40 +1,50 @@
 using UnityEngine;
-using UnityEngine.Tilemaps;
 using System.Collections.Generic;
-
 //https://www.gamersglobal.de/report/pac-man?page=0,3
 public class GhostMovement : MonoBehaviour
 {
-    public float moveSpeed = 5f;
+    [Header("Speed Settings")]
     public float normalSpeed = 5f;
     public float tunnelSpeed = 3f;
-    
-    public Tilemap wallTilemap;
+
+    [Header("Wall Detection")]
+    public LayerMask wallLayerMask;
+    public float checkRadius = 0.1f;
+
     public enum GhostMode { Random, Blinky, Pinky, Inky, Clyde }
     public GhostMode mode = GhostMode.Random;
 
-    public Transform chaseTarget; // z. B. Pacman
-    public Transform scatterTarget; // Home Position auf dem Grid
-    public Transform blinkyTransform;
+    [Header("Targets")]
+    public Transform chaseTarget;      // z.B. Pacman
+    public Transform scatterTarget;    // Eck-Ziel
+    public Transform blinkyTransform;  // für Inky
 
     private bool isInScatterMode = false;
-
+    private float moveSpeed;
     private Vector3 targetPos;
-    private Vector2 moveDirection;
-    private Vector2 lastDirection;
+    private Vector3 moveDirection, lastDirection;
+
+    // 4 Grundrichtungen auf XZ-Ebene
+    private static readonly Vector3[] directions = {
+        Vector3.forward,   // +Z
+        Vector3.back,      // -Z
+        Vector3.left,      // -X
+        Vector3.right      // +X
+    };
 
     void Start()
     {
+        moveSpeed = normalSpeed;
         SnapToGrid();
-        moveDirection = Vector2.left;
+        moveDirection = Vector3.left;
         lastDirection = moveDirection;
         SetNextTarget();
     }
 
     void Update()
     {
+        // Bewegung zum nächsten Grid-Punkt
         transform.position = Vector3.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
-
         if (Vector3.Distance(transform.position, targetPos) < 0.01f)
         {
             transform.position = targetPos;
@@ -43,55 +53,50 @@ public class GhostMovement : MonoBehaviour
         }
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("TunnelZone"))
-        {
             moveSpeed = tunnelSpeed;
-        }
-        if (other.CompareTag("TeleportLeft"))
+        else if (other.CompareTag("TeleportLeft"))
         {
-            // Teleport zur rechten Seite
-            transform.position = new Vector3(26.5f, transform.position.y, 0);
+            transform.position = new Vector3(26.5f, transform.position.y, transform.position.z);
             targetPos = transform.position;
         }
-
-        if (other.CompareTag("TeleportRight"))
+        else if (other.CompareTag("TeleportRight"))
         {
-            // Teleport zur linken Seite
-            transform.position = new Vector3(1.5f, transform.position.y, 0);
+            transform.position = new Vector3(1.5f, transform.position.y, transform.position.z);
             targetPos = transform.position;
         }
     }
-    void OnTriggerExit2D(Collider2D other)
+
+    void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("TunnelZone"))
-        {
             moveSpeed = normalSpeed;
-        }
     }
 
     void SnapToGrid()
     {
-        Vector3 pos = transform.position;
-        transform.position = pos;
-        targetPos = pos;
+        Vector3 p = transform.position;
+        Vector2Int cell = new Vector2Int(
+            Mathf.RoundToInt(p.x),
+            Mathf.RoundToInt(p.z)
+        );
+        transform.position = new Vector3(cell.x, p.y, cell.y);
+        targetPos = transform.position;
     }
 
     void SetNextTarget()
     {
-        targetPos = transform.position + (Vector3)moveDirection;
+        targetPos = transform.position + moveDirection;
     }
 
     void ChooseNewDirection()
     {
-        List<Vector2> possibleDirs = new List<Vector2>();
-        Vector2[] directions = { Vector2.up, Vector2.down, Vector2.left, Vector2.right };
-
-        foreach (Vector2 dir in directions)
+        var possibleDirs = new List<Vector3>();
+        foreach (var dir in directions)
         {
             if (dir == -lastDirection) continue;
-
             if (CanMove(dir))
                 possibleDirs.Add(dir);
         }
@@ -99,133 +104,86 @@ public class GhostMovement : MonoBehaviour
         if (possibleDirs.Count == 0)
         {
             if (CanMove(-lastDirection))
-            {
                 moveDirection = -lastDirection;
-                lastDirection = moveDirection;
-            }
-            return;
+            // sonst stehen bleiben
         }
-
-        if (mode == GhostMode.Random || chaseTarget == null)
+        else
         {
-            moveDirection = possibleDirs[Random.Range(0, possibleDirs.Count)];
-        }
-        else if (mode == GhostMode.Blinky)
-        {
-            Vector3 targetPosWorld = isInScatterMode ? scatterTarget.position : chaseTarget.position;
-            float shortestDist = Mathf.Infinity;
-            Vector2 bestDir = possibleDirs[0];
-
-            foreach (Vector2 dir in possibleDirs)
+            if (mode == GhostMode.Random || chaseTarget == null)
             {
-                Vector3 checkPos = transform.position + (Vector3)dir;
-                float dist = Vector3.Distance(checkPos, targetPosWorld);
-                if (dist < shortestDist)
-                {
-                    shortestDist = dist;
-                    bestDir = dir;
-                }
-            }
-
-            moveDirection = bestDir;
-        }
-        else if (mode == GhostMode.Pinky && chaseTarget != null)
-        {
-            // Pinky: Ziel = 4 Tiles in Blickrichtung von Pacman
-            Vector2 pacmanDir = chaseTarget.GetComponent<PlayerGridMovement>().GetCurrentDirection();
-            Vector3 targetPosWorld = isInScatterMode ? scatterTarget.position : chaseTarget.position + (Vector3)(pacmanDir * 4f);
-
-            float shortestDist = Mathf.Infinity;
-            Vector2 bestDir = possibleDirs[0];
-
-            foreach (Vector2 dir in possibleDirs)
-            {
-                Vector3 checkPos = transform.position + (Vector3)dir;
-                float dist = Vector3.Distance(checkPos, targetPosWorld);
-                if (dist < shortestDist)
-                {
-                    shortestDist = dist;
-                    bestDir = dir;
-                }
-            }
-
-            moveDirection = bestDir;
-        }
-        else if (mode == GhostMode.Clyde && chaseTarget != null && scatterTarget != null)
-        {
-            float distanceToPacman = Vector3.Distance(transform.position, chaseTarget.position);
-            Vector3 targetPosWorld;
-
-            if (distanceToPacman >= 8f)
-            {
-                // Jagd-Modus (wie Blinky)
-                targetPosWorld = isInScatterMode ? scatterTarget.position : chaseTarget.position;
+                moveDirection = possibleDirs[Random.Range(0, possibleDirs.Count)];
             }
             else
             {
-                // Rückzug zur Ecke
-                targetPosWorld = scatterTarget.position;
-            }
+                // Zielpunkt bestimmen
+                Vector3 targetWorld = isInScatterMode
+                    ? scatterTarget.position
+                    : chaseTarget.position;
 
-            float shortestDist = Mathf.Infinity;
-            Vector2 bestDir = possibleDirs[0];
-
-            foreach (Vector2 dir in possibleDirs)
-            {
-                Vector3 checkPos = transform.position + (Vector3)dir;
-                float dist = Vector3.Distance(checkPos, targetPosWorld);
-                if (dist < shortestDist)
+                switch (mode)
                 {
-                    shortestDist = dist;
-                    bestDir = dir;
+                    case GhostMode.Blinky:
+                        // Ziel = Pacman oder Scatter
+                        break;
+
+                    case GhostMode.Pinky:
+                        // 4 Felder vor Pacman
+                        var pd = chaseTarget.GetComponent<PlayerGridMovement>().GetCurrentDirection();
+                        targetWorld = isInScatterMode
+                            ? scatterTarget.position
+                            : chaseTarget.position + (Vector3)(pd * 4f);
+                        break;
+
+                    case GhostMode.Clyde:
+                        float dist = Vector3.Distance(transform.position, chaseTarget.position);
+                        if (dist >= 8f)
+                            targetWorld = isInScatterMode ? scatterTarget.position : chaseTarget.position;
+                        else
+                            targetWorld = scatterTarget.position;
+                        break;
+
+                    case GhostMode.Inky:
+                        var pacDir = chaseTarget.GetComponent<PlayerGridMovement>().GetCurrentDirection();
+                        Vector3 tileAhead = chaseTarget.position + (Vector3)(pacDir * 2f);
+                        Vector3 V = tileAhead - blinkyTransform.position;
+                        targetWorld = isInScatterMode
+                            ? scatterTarget.position
+                            : blinkyTransform.position + 2f * V;
+                        break;
                 }
-            }
 
-            moveDirection = bestDir;
-        }
-        else if (mode == GhostMode.Inky && chaseTarget != null && blinkyTransform != null)
-        {
-            // 1. Zielpunkt 2 Tiles vor Pacman
-            Vector2 pacmanDir = chaseTarget.GetComponent<PlayerGridMovement>().GetCurrentDirection();
-            Vector3 tileAhead = chaseTarget.position + (Vector3)(pacmanDir * 2f);
-
-            // 2. Vektor von Blinky zu diesem Punkt
-            Vector3 V = tileAhead - blinkyTransform.position;
-
-            // 3. Ziel = BlinkyPos + 2 * V
-            Vector3 targetPosWorld = isInScatterMode ? scatterTarget.position : blinkyTransform.position + 2f * V;
-
-            // 4. Richtung auswählen wie immer
-            float shortestDist = Mathf.Infinity;
-            Vector2 bestDir = possibleDirs[0];
-
-            foreach (Vector2 dir in possibleDirs)
-            {
-                Vector3 checkPos = transform.position + (Vector3)dir;
-                float dist = Vector3.Distance(checkPos, targetPosWorld);
-                if (dist < shortestDist)
+                // Kürzeste Distanz wählen
+                float shortest = float.PositiveInfinity;
+                Vector3 best = possibleDirs[0];
+                foreach (var dir in possibleDirs)
                 {
-                    shortestDist = dist;
-                    bestDir = dir;
+                    Vector3 check = transform.position + dir;
+                    float d = Vector3.Distance(check, targetWorld);
+                    if (d < shortest)
+                    {
+                        shortest = d;
+                        best = dir;
+                    }
                 }
+                moveDirection = best;
             }
-
-            moveDirection = bestDir;
         }
 
         lastDirection = moveDirection;
     }
 
-    bool CanMove(Vector2 dir)
-    {
-        Vector3Int gridPos = wallTilemap.WorldToCell(transform.position + (Vector3)dir);
-        return !wallTilemap.HasTile(gridPos);
-    }
+    bool CanMove(Vector3 dir)
+{
+    Vector3 checkPos = transform.position + dir;
+    // Kreuz aus Linien zeichnen
+    float r = checkRadius;
+    Debug.DrawLine(checkPos + Vector3.left * r,    checkPos + Vector3.right * r,   Color.red, 0.1f);
+    Debug.DrawLine(checkPos + Vector3.forward * r, checkPos + Vector3.back   * r,   Color.red, 0.1f);
+    return !Physics.CheckSphere(checkPos, checkRadius, wallLayerMask);
+}
 
-    public void StopMovement()
-    {
-        moveSpeed = 0f;
-    }
+    // Hilfsfunktionen
+    public void StopMovement() => moveSpeed = 0f;
 
     public void ReverseDirection()
     {
@@ -238,8 +196,8 @@ public class GhostMovement : MonoBehaviour
     {
         if (mode == GhostMode.Blinky)
         {
-            if (remainingDots <= 60) moveSpeed = 5.5f;
-            if (remainingDots <= 20) moveSpeed = 6.0f; // Cruise Elroy!
+            if (remainingDots <= 60) moveSpeed = normalSpeed * 1.1f;
+            if (remainingDots <= 20) moveSpeed = normalSpeed * 1.2f; // Cruise Elroy!
         }
     }
 

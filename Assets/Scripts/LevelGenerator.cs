@@ -18,6 +18,7 @@ public class LevelGenerator : MonoBehaviour
     void GenerateLevel()
     {
         string[] rows = levelText.Split('\n');
+        int wallLayer = LayerMask.NameToLayer("Wall");
         for (int z = 0; z < rows.Length; z++)
         {
             string row = rows[z];
@@ -33,7 +34,14 @@ public class LevelGenerator : MonoBehaviour
                 switch (c)
                 {
                     case 'W':
-                        Instantiate(wallPrefab, basePos + Vector3.up * 0.5f, Quaternion.identity, transform);
+                        // Wall instanziieren und Layer setzen
+                        GameObject wall = Instantiate(
+                            wallPrefab,
+                            basePos + Vector3.up * 0.5f,
+                            Quaternion.identity,
+                            transform
+                        );
+                        SetLayerRecursively(wall, wallLayer);
                         break;
                     case '.':
                         Instantiate(dotPrefab, basePos + Vector3.up * 0.2f, Quaternion.identity, transform);
@@ -46,6 +54,15 @@ public class LevelGenerator : MonoBehaviour
                         break;
                 }
             }
+        }
+    }
+        // Setzt den Layer rekursiv bei allen Child-Objekten
+    void SetLayerRecursively(GameObject obj, int layer)
+    {
+        obj.layer = layer;
+        foreach (Transform child in obj.transform)
+        {
+            SetLayerRecursively(child.gameObject, layer);
         }
     }
 }
