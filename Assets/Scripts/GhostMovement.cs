@@ -128,10 +128,14 @@ public class GhostMovement : MonoBehaviour
 
                     case GhostMode.Pinky:
                         // 4 Felder vor Pacman
-                        var pd = chaseTarget.GetComponent<PlayerGridMovement>().GetCurrentDirection();
+                        // Hole die 3D-Richtung vom FirstPerson-Controller
+                        var fpgm = chaseTarget.GetComponent<FirstPersonGridMovement>();
+                        Vector3 pd = fpgm != null 
+                            ? fpgm.GetCurrentDirection() 
+                            : Vector3.zero;
                         targetWorld = isInScatterMode
                             ? scatterTarget.position
-                            : chaseTarget.position + (Vector3)(pd * 4f);
+                            : chaseTarget.position + pd * 4f;
                         break;
 
                     case GhostMode.Clyde:
@@ -143,12 +147,15 @@ public class GhostMovement : MonoBehaviour
                         break;
 
                     case GhostMode.Inky:
-                        var pacDir = chaseTarget.GetComponent<PlayerGridMovement>().GetCurrentDirection();
-                        Vector3 tileAhead = chaseTarget.position + (Vector3)(pacDir * 2f);
-                        Vector3 V = tileAhead - blinkyTransform.position;
-                        targetWorld = isInScatterMode
-                            ? scatterTarget.position
-                            : blinkyTransform.position + 2f * V;
+                       var fpgm2 = chaseTarget.GetComponent<FirstPersonGridMovement>();
+                        Vector3 pacDir = fpgm2 != null 
+                            ? fpgm2.GetCurrentDirection() 
+                            : Vector3.forward;
+                         Vector3 tileAhead = chaseTarget.position + (Vector3)(pacDir * 2f);
+                         Vector3 V = tileAhead - blinkyTransform.position;
+                         targetWorld = isInScatterMode
+                             ? scatterTarget.position
+                             : blinkyTransform.position + 2f * V;
                         break;
                 }
 
