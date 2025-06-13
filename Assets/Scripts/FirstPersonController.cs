@@ -82,6 +82,17 @@ public class FirstPersonGridMovement : MonoBehaviour
       }
     }
   }
+  void OnTriggerEnter(Collider other)
+  {
+      if (other.CompareTag("Dot"))
+      {
+        Debug.Log("Dot collected!");
+      // Score erhöhen
+      GameManager.Instance.AddScore(10);
+          // Dot entfernen
+          Destroy(other.gameObject);
+      }
+  }
 
   void HandleInput()
   {

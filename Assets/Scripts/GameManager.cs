@@ -1,18 +1,20 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
     public int playerLives = 3;
+    public Image[] lifeHearts; // UI für Leben
     public int score = 0;
-    public Text scoreText;
+    public TextMeshProUGUI scoreText;
 
     void Awake()
     {
         if (Instance == null)
-        { 
+        {
             Instance = this;
             DontDestroyOnLoad(gameObject);
         }
@@ -25,6 +27,7 @@ public class GameManager : MonoBehaviour
     public void AddScore(int amount)
     {
         score += amount;
+        // Score-UI updaten
         UpdateUI();
     }
 
@@ -35,11 +38,12 @@ public class GameManager : MonoBehaviour
         if (playerLives <= 0)
         {
             GameOver();
-        } 
+        }
         else
         {
             // Respawn-Logik oder Level neu laden
             Debug.Log("Player respawned. Lives left: " + playerLives);
+            UpdateUI();
         }
     }
 
@@ -68,5 +72,19 @@ public class GameManager : MonoBehaviour
     {
         if (scoreText != null)
             scoreText.text = "Score: " + score;
+        if (lifeHearts != null && lifeHearts.Length > 0)
+        {
+            for (int i = 0; i < lifeHearts.Length; i++)
+            {
+                if (i < playerLives)
+                {
+                    lifeHearts[i].enabled = true; // Herz anzeigen
+                }
+                else
+                {
+                    lifeHearts[i].enabled = false; // Herz ausblenden
+                }
+            }
+        }
     }
 }
