@@ -11,8 +11,6 @@ public class GameManager : MonoBehaviour
     public int score = 0;
     public TextMeshProUGUI scoreText;
 
-    public Transform playerSpawnPoint; // Spawnpunkt für den Spieler
-
     void Awake()
     {
         if (Instance == null)
@@ -46,7 +44,9 @@ public class GameManager : MonoBehaviour
         {
             // Respawn-Logik oder Level neu laden
             Debug.Log("Player respawned. Lives left: " + playerLives);
-            pacman.transform.position = playerSpawnPoint.position; // Spieler zurück zum Spawnpunkt teleportieren
+            //pacman.transform.position = playerSpawnPoint.position; // Spieler zurück zum Spawnpunkt teleportieren
+            //pacman.transform.rotation = playerSpawnPoint.rotation; // Spieler zurück zur Startrotation teleportieren
+            pacman.GetComponent<FirstPersonGridMovement>().ResetAfterTeleport(new Vector3(13f, 0.6f, -23f), Quaternion.Euler(0, 90f, 0));
             UpdateUI();
         }
     }
@@ -60,7 +60,7 @@ public class GameManager : MonoBehaviour
         GameObject pacman = GameObject.FindWithTag("Player");
         if (pacman != null)
         {
-            pacman.GetComponent<PlayerGridMovement>().StopMovement();
+            pacman.GetComponent<FirstPersonGridMovement>().StopMovement();
         }
 
         //Ghosts stoppen
