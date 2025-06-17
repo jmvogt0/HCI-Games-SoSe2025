@@ -84,14 +84,34 @@ public class FirstPersonGridMovement : MonoBehaviour
   }
   void OnTriggerEnter(Collider other)
   {
-      if (other.CompareTag("Dot"))
-      {
-        Debug.Log("Dot collected!");
+    if (other.CompareTag("Dot"))
+    {
+      //Debug.Log("Dot collected!");
       // Score erhöhen
       GameManager.Instance.AddScore(10);
-          // Dot entfernen
-          Destroy(other.gameObject);
-      }
+      // Dot entfernen
+      Destroy(other.gameObject);
+    }
+    if (other.CompareTag("TeleportLeft"))
+    {
+      // Teleport zur rechten Seite
+      transform.position = new Vector3(26.5f, transform.position.y, 0);
+      targetPos = transform.position;
+    }
+    if (other.CompareTag("TeleportRight"))
+    {
+      // Teleport zur linken Seite
+      transform.position = new Vector3(1.5f, transform.position.y, 0);
+      targetPos = transform.position;
+    }
+    if (other.gameObject.CompareTag("Ghost"))
+    {
+      Debug.Log("Kontakt mit Geist!");
+      GameManager.Instance.LoseLife();
+      // Optional: Pacman "resetten" oder sterben lassen
+      // z. B. zurück zur Startposition
+      // transform.position = GameManager.Instance.GetPacmanStartPosition();
+    }
   }
 
   void HandleInput()

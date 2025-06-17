@@ -11,6 +11,8 @@ public class GameManager : MonoBehaviour
     public int score = 0;
     public TextMeshProUGUI scoreText;
 
+    public Transform playerSpawnPoint; // Spawnpunkt für den Spieler
+
     void Awake()
     {
         if (Instance == null)
@@ -34,6 +36,7 @@ public class GameManager : MonoBehaviour
     public void LoseLife()
     {
         playerLives--;
+        GameObject pacman = GameObject.FindWithTag("Player");
 
         if (playerLives <= 0)
         {
@@ -43,6 +46,7 @@ public class GameManager : MonoBehaviour
         {
             // Respawn-Logik oder Level neu laden
             Debug.Log("Player respawned. Lives left: " + playerLives);
+            pacman.transform.position = playerSpawnPoint.position; // Spieler zurück zum Spawnpunkt teleportieren
             UpdateUI();
         }
     }
