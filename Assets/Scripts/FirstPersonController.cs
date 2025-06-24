@@ -95,14 +95,16 @@ public class FirstPersonGridMovement : MonoBehaviour
     if (other.CompareTag("TeleportLeft"))
     {
       // Teleport zur rechten Seite
-      transform.position = new Vector3(26.5f, transform.position.y, 0);
-      targetPos = transform.position;
+      ResetAfterTeleport(new Vector3(24.5f, 0.6f, -14f), Quaternion.Euler(0, -90f, 0));
+      //transform.position = new Vector3(25.5f, transform.position.y, 0);
+      //targetPos = transform.position;
     }
     if (other.CompareTag("TeleportRight"))
     {
       // Teleport zur linken Seite
-      transform.position = new Vector3(1.5f, transform.position.y, 0);
-      targetPos = transform.position;
+      ResetAfterTeleport(new Vector3(2.5f, 0.6f, -14f), Quaternion.Euler(0, 90f, 0));
+      //transform.position = new Vector3(1.5f, transform.position.y, 0);
+      //targetPos = transform.position;
     }
     if (other.gameObject.CompareTag("Ghost"))
     {
