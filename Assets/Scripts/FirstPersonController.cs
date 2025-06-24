@@ -205,8 +205,9 @@ public class FirstPersonGridMovement : MonoBehaviour
     targetRotation = transform.rotation;
     moveSpeed = 0f;
   }
-public void ResetAfterTeleport(Vector3 newPosition, Quaternion? newRotation = null)
-{
+ 
+  public void ResetAfterTeleport(Vector3 newPosition, Quaternion? newRotation = null)
+  {
     // Bewegung sofort stoppen
     isMoving = false;
     isRotating = false;
@@ -219,15 +220,15 @@ public void ResetAfterTeleport(Vector3 newPosition, Quaternion? newRotation = nu
     // Rotation zurücksetzen, wenn gewünscht
     if (newRotation.HasValue)
     {
-        transform.rotation = newRotation.Value;
-        targetRotation = newRotation.Value;
+      transform.rotation = newRotation.Value;
+      targetRotation = newRotation.Value;
     }
     else
     {
-        targetRotation = transform.rotation;
+      targetRotation = transform.rotation;
     }
 
     // Optional: Blickrichtung neu definieren
     // Kann helfen, falls du eine Standardausrichtung (z. B. nach rechts) nach jedem Respawn willst
-}
+  }
 }

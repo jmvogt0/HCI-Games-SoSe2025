@@ -11,6 +11,11 @@ public class GameManager : MonoBehaviour
     public int score = 0;
     public TextMeshProUGUI scoreText;
 
+    [Header("UI – Herz")]
+    public TextMeshProUGUI heartRateText;         // für BPM-Anzeige
+    public RectTransform heartIconTransform;      // fürs Pulsieren
+    public float pulseAmplitude = 0.1f;           // Max-Skalierungs-Abweichung
+
     void Awake()
     {
         if (Instance == null)
@@ -24,11 +29,40 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    void Update()
+    {
+        // Herzfrequenz-UI aktualisieren
+        UpdateHeartRateUI();
+
+        // Herz-Icon pulsieren lassen
+        AnimateHeartIcon();
+    }
+
     public void AddScore(int amount)
     {
         score += amount;
         // Score-UI updaten
         UpdateUI();
+
+                // nach jedem gesammelten Dot prüfen, ob keine mehr da sind:
+        CheckForWin();
+    }
+
+    // 1. Prüft, ob noch Objekte mit Tag "Dot" existieren
+    private void CheckForWin()
+    {
+        // FindGameObjects… liefert alle GameObjects mit Tag
+        if (GameObject.FindGameObjectsWithTag("Dot").Length == 0)
+        {
+            OnAllDotsCollected();
+        }
+    }
+
+    // 2. Gewinnzustand behandeln
+    private void OnAllDotsCollected()
+    {
+        Debug.Log("Gewonnen! Alle Dots gesammelt.");
+        // SceneManager.LoadScene("WinScene");
     }
 
     public void LoseLife()
@@ -70,6 +104,29 @@ public class GameManager : MonoBehaviour
             ghost.GetComponent<GhostMovement>().StopMovement();
         }
 
+    }
+
+    private void UpdateHeartRateUI()
+    {
+        if (HeartRateManager.Instance == null || heartRateText == null)
+            return;
+
+        int hr = HeartRateManager.Instance.currentHR;
+
+        heartRateText.text = $"{hr:F0}";
+    }
+
+    private void AnimateHeartIcon()
+    {
+        if (heartIconTransform == null || HeartRateManager.Instance == null)
+            return;
+
+        int hr = HeartRateManager.Instance.currentHR;
+
+        float pulseFreq = hr / 60f; // Pulse pro Sekunde
+        float scaleOffset = Mathf.Sin(Time.time * pulseFreq * 2f * Mathf.PI) * pulseAmplitude;
+        float scale = 1f + scaleOffset;
+        heartIconTransform.localScale = new Vector3(scale, scale, 1f);
     }
 
     void UpdateUI()
