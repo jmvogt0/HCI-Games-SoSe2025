@@ -10,6 +10,7 @@ public class FirstPersonGridMovement : MonoBehaviour
 
   private Vector3 targetPos;
   private bool isMoving = false;
+  private bool pendingFlip = false;
   public float rotationAngle = 90f; // Drehung pro Tastendruck in Grad
   private Quaternion targetRotation; // Zielrotation
   private bool isRotating = false;
@@ -32,6 +33,14 @@ public class FirstPersonGridMovement : MonoBehaviour
     //Debug.Log("MoveSpeed: " + moveSpeed);
     if (!isMoving && !isRotating)
     {
+      // 180°-Flip zuerst abarbeiten
+      if (pendingFlip)
+      {
+        targetRotation *= Quaternion.Euler(0, 180f, 0);
+        isRotating = true;
+        pendingFlip = false;
+        return; // keine Vorwärtsbewegung in diesem Frame
+      }
       if (pendingTurn != 0)
       {
         Vector3 checkDir = RoundToGrid(Quaternion.Euler(0, pendingTurn * rotationAngle, 0) * transform.forward);
@@ -119,6 +128,11 @@ public class FirstPersonGridMovement : MonoBehaviour
   void HandleInput()
   {
     // --- Rotation ---
+    if (Input.GetKeyDown(KeyCode.S))
+    {
+      Debug.Log("Input S - Pending 180°-Flip");
+      pendingFlip = true;
+    }
     if (Input.GetKeyDown(KeyCode.A))
     {
       Debug.Log("Input A - Pending turn set to -1");
