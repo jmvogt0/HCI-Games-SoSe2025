@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
 //https://www.gamersglobal.de/report/pac-man?page=0,3
 public class GhostMovement : MonoBehaviour
 {
@@ -24,6 +25,9 @@ public class GhostMovement : MonoBehaviour
   private Vector3 targetPos;
   private Vector3 moveDirection, lastDirection;
 
+  [Header("Start Delay")]
+  public float startDelay = 0f; // individuell pro Ghost einstellen  
+
   // 4 Grundrichtungen auf XZ-Ebene
   private static readonly Vector3[] directions = {
         Vector3.forward,   // +Z
@@ -34,11 +38,12 @@ public class GhostMovement : MonoBehaviour
 
   void Start()
   {
-    moveSpeed = normalSpeed;
+    moveSpeed = 0f;
     SnapToGrid();
     moveDirection = Vector3.left;
     lastDirection = moveDirection;
     SetNextTarget();
+    StartCoroutine(StartAfterDelay());
   }
 
   void Update()
@@ -59,12 +64,12 @@ public class GhostMovement : MonoBehaviour
       moveSpeed = tunnelSpeed;
     else if (other.CompareTag("TeleportLeft"))
     {
-      transform.position = new Vector3(26.5f, transform.position.y, transform.position.z);
+      transform.position = new Vector3(24f, transform.position.y, transform.position.z);
       targetPos = transform.position;
     }
     else if (other.CompareTag("TeleportRight"))
     {
-      transform.position = new Vector3(1.5f, transform.position.y, transform.position.z);
+      transform.position = new Vector3(3f, transform.position.y, transform.position.z);
       targetPos = transform.position;
     }
   }
@@ -213,4 +218,29 @@ public class GhostMovement : MonoBehaviour
     isInScatterMode = scatter;
     Debug.Log("Ghost " + mode + " is now in " + (scatter ? "scatter" : "chase") + " mode.");
   }
+
+  public void ResetAfterTeleport(Vector3 position, Quaternion rotation)
+  {
+    transform.position = position;
+    transform.rotation = rotation;
+    SnapToGrid();
+    moveDirection = Vector3.left;
+    lastDirection = moveDirection;
+    SetNextTarget();
+    moveSpeed = normalSpeed;
+    isInScatterMode = false; // Scatter Mode zurücksetzen
+  }
+
+  IEnumerator StartAfterDelay()
+  {
+    yield return new WaitForSeconds(startDelay);
+    moveSpeed = normalSpeed;
+    Debug.Log($"Ghost {mode} started moving after {startDelay} seconds.");
+}
+  public void RestartWithDelay()
+{
+    StopAllCoroutines();          // alte Coroutines stoppen
+    moveSpeed = 0f;               // sofort anhalten
+    StartCoroutine(StartAfterDelay());
+}
 }

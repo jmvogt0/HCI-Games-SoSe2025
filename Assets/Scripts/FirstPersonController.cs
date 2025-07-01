@@ -95,14 +95,14 @@ public class FirstPersonGridMovement : MonoBehaviour
     if (other.CompareTag("TeleportLeft"))
     {
       // Teleport zur rechten Seite
-      ResetAfterTeleport(new Vector3(24.5f, 0.6f, -14f), Quaternion.Euler(0, -90f, 0));
+      ResetAfterTeleport(new Vector3(24f, 0.6f, -14f), Quaternion.Euler(0, -90f, 0));
       //transform.position = new Vector3(25.5f, transform.position.y, 0);
       //targetPos = transform.position;
     }
     if (other.CompareTag("TeleportRight"))
     {
       // Teleport zur linken Seite
-      ResetAfterTeleport(new Vector3(2.5f, 0.6f, -14f), Quaternion.Euler(0, 90f, 0));
+      ResetAfterTeleport(new Vector3(3f, 0.6f, -14f), Quaternion.Euler(0, 90f, 0));
       //transform.position = new Vector3(1.5f, transform.position.y, 0);
       //targetPos = transform.position;
     }

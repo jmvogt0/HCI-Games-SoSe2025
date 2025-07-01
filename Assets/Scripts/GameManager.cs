@@ -81,7 +81,14 @@ public class GameManager : MonoBehaviour
             //pacman.transform.position = playerSpawnPoint.position; // Spieler zurück zum Spawnpunkt teleportieren
             //pacman.transform.rotation = playerSpawnPoint.rotation; // Spieler zurück zur Startrotation teleportieren
             pacman.GetComponent<FirstPersonGridMovement>().ResetAfterTeleport(new Vector3(13f, 0.6f, -23f), Quaternion.Euler(0, 90f, 0));
+            // Nun noch Ghosts zurücksetzen
             UpdateUI();
+            GameObject[] ghosts = GameObject.FindGameObjectsWithTag("Ghost");
+            foreach (GameObject ghost in ghosts)
+            {
+                ghost.GetComponent<GhostMovement>().ResetAfterTeleport(new Vector3(13f, 0.8f, -11f), Quaternion.Euler(0, 0, 0));
+                ghost.GetComponent<GhostMovement>().RestartWithDelay();
+            }
         }
     }
 

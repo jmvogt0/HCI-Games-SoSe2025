@@ -578,6 +578,7 @@ MonoBehaviour:
   chaseTarget: {fileID: 1269950618}
   scatterTarget: {fileID: 1628897059}
   blinkyTransform: {fileID: 0}
+  startDelay: 0
 --- !u!4 &536390466
 Transform:
   m_ObjectHideFlags: 0
@@ -2186,6 +2187,7 @@ MonoBehaviour:
   chaseTarget: {fileID: 1269950618}
   scatterTarget: {fileID: 1079486421}
   blinkyTransform: {fileID: 0}
+  startDelay: 10
 --- !u!4 &1394056171
 Transform:
   m_ObjectHideFlags: 0
@@ -2502,6 +2504,7 @@ MonoBehaviour:
   chaseTarget: {fileID: 1269950618}
   scatterTarget: {fileID: 1531207617}
   blinkyTransform: {fileID: 0}
+  startDelay: 45
 --- !u!4 &1665580818
 Transform:
   m_ObjectHideFlags: 0
@@ -2581,6 +2584,7 @@ MonoBehaviour:
   chaseTarget: {fileID: 1269950618}
   scatterTarget: {fileID: 1616056943}
   blinkyTransform: {fileID: 536390466}
+  startDelay: 30
 --- !u!4 &1727007694
 Transform:
   m_ObjectHideFlags: 0
