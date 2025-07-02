@@ -43,7 +43,6 @@ public class GhostMovement : MonoBehaviour
     moveDirection = Vector3.left;
     lastDirection = moveDirection;
     SetNextTarget();
-    StartCoroutine(StartAfterDelay());
   }
 
   void Update()
@@ -197,6 +196,12 @@ public class GhostMovement : MonoBehaviour
   // Hilfsfunktionen
   public void StopMovement() => moveSpeed = 0f;
 
+  public void EnableMovement()
+  {
+    moveSpeed = normalSpeed;
+    Debug.Log("Ghost " + mode + " movement enabled.");
+  }
+
   public void ReverseDirection()
   {
     moveDirection = -moveDirection;
@@ -234,13 +239,19 @@ public class GhostMovement : MonoBehaviour
   IEnumerator StartAfterDelay()
   {
     yield return new WaitForSeconds(startDelay);
+    EnableMovement();
     moveSpeed = normalSpeed;
     Debug.Log($"Ghost {mode} started moving after {startDelay} seconds.");
-}
+  }
   public void RestartWithDelay()
-{
+  {
     StopAllCoroutines();          // alte Coroutines stoppen
     moveSpeed = 0f;               // sofort anhalten
     StartCoroutine(StartAfterDelay());
-}
+  }
+  public void StartDelayedMovement()
+  {
+    StopAllCoroutines();          // sicherstellen, dass keine alten Timer laufen
+    StartCoroutine(StartAfterDelay());
+  }
 }

@@ -4,6 +4,7 @@ using TMPro;
 
 public class FirstPersonGridMovement : MonoBehaviour
 {
+  private bool inputEnabled = false;
   [Header("Speed Settings")]
   public float moveSpeed = 5f;
   public float gridSize = 1f;
@@ -70,7 +71,7 @@ public class FirstPersonGridMovement : MonoBehaviour
     }
 
     HandleInput();
-
+    if (!inputEnabled) return;
     if (isMoving)
     {
       transform.position = Vector3.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
@@ -220,8 +221,16 @@ public class FirstPersonGridMovement : MonoBehaviour
     targetPos = transform.position;
     targetRotation = transform.rotation;
     moveSpeed = 0f;
+    inputEnabled = false;
   }
- 
+  public void EnableMovement()
+  {
+    // Hier stellst du die Bewegungsgeschwindigkeit wieder auf den aktuellen Wert ein,
+    // damit Pacman sich wieder bewegen kann.
+    UpdateMoveSpeedFromHeartRate();
+    inputEnabled = true;
+  }
+
   public void ResetAfterTeleport(Vector3 newPosition, Quaternion? newRotation = null)
   {
     // Bewegung sofort stoppen

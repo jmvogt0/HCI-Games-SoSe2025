@@ -1,12 +1,13 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
-
     public int playerLives = 3;
+    public TextMeshProUGUI countdownText; // UI-Element für den Countdown
     public Image[] lifeHearts; // UI für Leben
     public int score = 0;
     public TextMeshProUGUI scoreText;
@@ -29,6 +30,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    void Start()
+    {
+        StartCoroutine(StartCountdown());
+    }
+
     void Update()
     {
         // Herzfrequenz-UI aktualisieren
@@ -44,7 +50,7 @@ public class GameManager : MonoBehaviour
         // Score-UI updaten
         UpdateUI();
 
-                // nach jedem gesammelten Dot prüfen, ob keine mehr da sind:
+        // nach jedem gesammelten Dot prüfen, ob keine mehr da sind:
         CheckForWin();
     }
 
@@ -81,14 +87,16 @@ public class GameManager : MonoBehaviour
             //pacman.transform.position = playerSpawnPoint.position; // Spieler zurück zum Spawnpunkt teleportieren
             //pacman.transform.rotation = playerSpawnPoint.rotation; // Spieler zurück zur Startrotation teleportieren
             pacman.GetComponent<FirstPersonGridMovement>().ResetAfterTeleport(new Vector3(13f, 0.6f, -23f), Quaternion.Euler(0, 90f, 0));
+            pacman.GetComponent<FirstPersonGridMovement>().StopMovement();
             // Nun noch Ghosts zurücksetzen
             UpdateUI();
             GameObject[] ghosts = GameObject.FindGameObjectsWithTag("Ghost");
             foreach (GameObject ghost in ghosts)
             {
                 ghost.GetComponent<GhostMovement>().ResetAfterTeleport(new Vector3(13f, 0.8f, -11f), Quaternion.Euler(0, 0, 0));
-                ghost.GetComponent<GhostMovement>().RestartWithDelay();
+                ghost.GetComponent<GhostMovement>().StopMovement();
             }
+             StartCoroutine(StartCountdown());
         }
     }
 
@@ -153,6 +161,41 @@ public class GameManager : MonoBehaviour
                     lifeHearts[i].enabled = false; // Herz ausblenden
                 }
             }
+        }
+    }
+
+    IEnumerator StartCountdown()
+    {
+        countdownText.gameObject.SetActive(true);
+
+        int countdown = 3;
+        while (countdown > 0)
+        {
+            countdownText.text = countdown.ToString();
+            yield return new WaitForSeconds(1f);
+            countdown--;
+        }
+
+        countdownText.text = "GO!";
+        yield return new WaitForSeconds(0.5f);
+
+        countdownText.gameObject.SetActive(false);
+
+        StartGameplay();
+    }
+
+    void StartGameplay()
+    {
+        // Hier Gameplay starten oder Bewegungen aktivieren
+        Debug.Log("Gameplay gestartet!");
+        GameObject pacman = GameObject.FindWithTag("Player");
+        if (pacman != null)
+            pacman.GetComponent<FirstPersonGridMovement>().EnableMovement();
+
+        GameObject[] ghosts = GameObject.FindGameObjectsWithTag("Ghost");
+        foreach (GameObject ghost in ghosts)
+        {
+            ghost.GetComponent<GhostMovement>().StartDelayedMovement();
         }
     }
 }
