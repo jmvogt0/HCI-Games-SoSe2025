@@ -17,6 +17,9 @@ public class GameManager : MonoBehaviour
     public RectTransform heartIconTransform;      // fürs Pulsieren
     public float pulseAmplitude = 0.1f;           // Max-Skalierungs-Abweichung
 
+    [SerializeField] private GameObject nameInputPanel; // Panel für Nameingabe
+    [SerializeField] private TMP_InputField nameInputField; // InputField für Namen
+
     void Awake()
     {
         if (Instance == null)
@@ -119,6 +122,31 @@ public class GameManager : MonoBehaviour
             ghost.GetComponent<GhostMovement>().StopMovement();
         }
 
+        nameInputPanel.SetActive(true);
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
+    }
+
+    public void OnSubmitName()
+    {
+        string playerName = nameInputField.text;
+        string date = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm");
+        int playerScore = score;
+
+        // Score speichern
+        ScoreManager.Instance.SaveScore(playerName, playerScore, date);
+
+         // GhostModeManager stoppen, bevor Szene gewechselt wird
+        GhostModeManager gmm = FindObjectOfType<GhostModeManager>();
+        if (gmm != null)
+        {
+            Destroy(gmm.gameObject); // oder: gmm.enabled = false;
+        }
+
+        // Scoreboard-Szene laden
+        UnityEngine.SceneManagement.SceneManager.LoadScene("ScoreboardScene");
     }
 
     private void UpdateHeartRateUI()
