@@ -448,13 +448,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 398799490}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 13, y: 10.9, z: -14.43}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1269950618}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!1 &427560255
 GameObject:
   m_ObjectHideFlags: 0
@@ -666,7 +666,7 @@ Transform:
   m_GameObject: {fileID: 536390464}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 13, y: 0.8, z: -11}
+  m_LocalPosition: {x: 13, y: 0.8, z: -13.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2422,7 +2422,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 398799493}
   - {fileID: 439430717}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3143,7 +3142,7 @@ Transform:
   m_GameObject: {fileID: 1394056169}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 13, y: 0.8, z: -11}
+  m_LocalPosition: {x: 14, y: 0.8, z: -13.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3460,7 +3459,7 @@ Transform:
   m_GameObject: {fileID: 1665580816}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 13, y: 0.8, z: -11}
+  m_LocalPosition: {x: 12, y: 0.8, z: -13.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3540,7 +3539,7 @@ Transform:
   m_GameObject: {fileID: 1727007692}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 13, y: 0.8, z: -11}
+  m_LocalPosition: {x: 15, y: 0.8, z: -13.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3970,7 +3969,7 @@ MonoBehaviour:
   floorPrefab: {fileID: 1717267999310666011, guid: 67c0e0e7ade174158a31d2746773c6d3, type: 3}
   levelText: "WWWWWWWWWWWWWWWWWWWWWWWWWWWW\nW............WW............W\nW.WWWW.WWWWW.WW.WWWWW.WWWW.W\nW*WWWW.WWWWW.WW.WWWWW.WWWW*W\nW.WWWW.WWWWW.WW.WWWWW.WWWW.W\nW..........................W\nW.WWWW.WW.WWWWWWWW.WW.WWWW.W\nW.WWWW.WW.WWWWWWWW.WW.WWWW.W\nW......WW....WW....WW......W\nWWWWWW.WWWWW
     WW WWWWW.WWWWWW\n     W.WWWWW WW WWWWW.W     \n     W.WW          WW.W     \n    
-    W.WW WWWGGWWW WW.W     \nWWWWWW.WW W      W WW.WWWWWW\n      .   W      W   .     
+    W.WW WWWWWWWW WW.W     \nWWWWWW.WW W      W WW.WWWWWW\n      .   W      W   .     
     \nWWWWWW.WW W      W WW.WWWWWW\n     W.WW WWWWWWWW WW.W     \n     W.WW         
     WW.W     \n     W.WW WWWWWWWW WW.W     \nWWWWWW.WW WWWWWWWW WW.WWWWWW\nW............WW............W\nW.WWWW.WWWWW.WW.WWWWW.WWWW.W\nW*WWWW.WWWWW.WW.WWWWW.WWWW*W\nW...WW................WW...W\nWWW.WW.WW.WWWWWWWW.WW.WW.WWW\nWWW.WW.WW.WWWWWWWW.WW.WW.WWW\nW......WW....WW....WW......W\nW.WWWWWWWWWW.WW.WWWWWWWWWW.W\nW.WWWWWWWWWW.WW.WWWWWWWWWW.W\nW..........................W\nWWWWWWWWWWWWWWWWWWWWWWWWWWWW"
 --- !u!4 &2044509799
@@ -4041,6 +4040,7 @@ SceneRoots:
   - {fileID: 765318721}
   - {fileID: 2044509799}
   - {fileID: 761739538}
+  - {fileID: 398799493}
   - {fileID: 1269950618}
   - {fileID: 536390466}
   - {fileID: 1394056171}

@@ -51,7 +51,8 @@ public class GhostMovement : MonoBehaviour
     transform.position = Vector3.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
     if (Vector3.Distance(transform.position, targetPos) < 0.01f)
     {
-      transform.position = targetPos;
+      //transform.position = targetPos;
+      SnapToGrid();
       ChooseNewDirection();
       SetNextTarget();
     }
@@ -239,6 +240,12 @@ public class GhostMovement : MonoBehaviour
   IEnumerator StartAfterDelay()
   {
     yield return new WaitForSeconds(startDelay);
+    transform.position = new Vector3(12f, 0.8f, -11f);
+    transform.rotation = Quaternion.Euler(0, -90f, 0);
+    SnapToGrid();                // auf Grid setzen
+    moveDirection = Vector3.right; // z. B. aus dem Cage raus Richtung rechts
+    lastDirection = moveDirection;
+    SetNextTarget();
     EnableMovement();
     moveSpeed = normalSpeed;
     Debug.Log($"Ghost {mode} started moving after {startDelay} seconds.");

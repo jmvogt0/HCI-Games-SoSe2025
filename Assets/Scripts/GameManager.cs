@@ -96,7 +96,7 @@ public class GameManager : MonoBehaviour
             GameObject[] ghosts = GameObject.FindGameObjectsWithTag("Ghost");
             foreach (GameObject ghost in ghosts)
             {
-                ghost.GetComponent<GhostMovement>().ResetAfterTeleport(new Vector3(13f, 0.8f, -11f), Quaternion.Euler(0, 0, 0));
+                ghost.GetComponent<GhostMovement>().ResetAfterTeleport(new Vector3(13f, 0.8f, -13.5f), Quaternion.Euler(0, 0, 0));
                 ghost.GetComponent<GhostMovement>().StopMovement();
             }
              StartCoroutine(StartCountdown());
