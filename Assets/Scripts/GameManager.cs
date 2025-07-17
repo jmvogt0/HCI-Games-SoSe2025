@@ -16,6 +16,8 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI heartRateText;         // für BPM-Anzeige
     public RectTransform heartIconTransform;      // fürs Pulsieren
     public float pulseAmplitude = 0.1f;           // Max-Skalierungs-Abweichung
+    [SerializeField] private AudioSource heartbeatAudio;
+    private float previousSin = 0f;
 
     [SerializeField] private GameObject nameInputPanel; // Panel für Nameingabe
     [SerializeField] private TMP_InputField nameInputField; // InputField für Namen
@@ -165,17 +167,26 @@ public class GameManager : MonoBehaviour
             return;
 
         int hr = HeartRateManager.Instance.currentHR;
-
         float pulseFreq = hr / 60f; // Pulse pro Sekunde
-        float scaleOffset = Mathf.Sin(Time.time * pulseFreq * 2f * Mathf.PI) * pulseAmplitude;
+
+        float sinValue = Mathf.Sin(Time.time * pulseFreq * 2f * Mathf.PI);
+        float scaleOffset = sinValue * pulseAmplitude;
         float scale = 1f + scaleOffset;
         heartIconTransform.localScale = new Vector3(scale, scale, 1f);
+
+        // ➕ Sound bei positiver Nullüberschreitung
+        if (previousSin < 0f && sinValue >= 0f)
+        {
+            heartbeatAudio.Play();
+        }
+
+        previousSin = sinValue;
     }
 
     void UpdateUI()
     {
         if (scoreText != null)
-            scoreText.text = "Score: " + score;
+            scoreText.text = score.ToString();
         if (lifeHearts != null && lifeHearts.Length > 0)
         {
             for (int i = 0; i < lifeHearts.Length; i++)
