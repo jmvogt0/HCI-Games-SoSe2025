@@ -44,10 +44,10 @@ public class LevelGenerator : MonoBehaviour
                         SetLayerRecursively(wall, wallLayer);
                         break;
                     case '.':
-                        Instantiate(dotPrefab, basePos + Vector3.up * 0.2f, Quaternion.identity, transform);
+                        Instantiate(dotPrefab, basePos + Vector3.up * 0.3f, Quaternion.identity, transform);
                         break;
                     case '*':
-                        Instantiate(powerDotPrefab, basePos + Vector3.up * 0.2f, Quaternion.identity, transform);
+                        Instantiate(powerDotPrefab, basePos + Vector3.up * 0.3f, Quaternion.identity, transform);
                         break;
                     case 'G':
                         // Ghost Spawn Position – optional verarbeiten
