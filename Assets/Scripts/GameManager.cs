@@ -9,15 +9,21 @@ public class GameManager : MonoBehaviour
     public int playerLives = 3;
     public TextMeshProUGUI countdownText; // UI-Element für den Countdown
     public Image[] lifeHearts; // UI für Leben
+
+    [Header("Score")]
     public int score = 0;
     public TextMeshProUGUI scoreText;
+    [SerializeField] private AudioSource scoreAudio;
+    [SerializeField] private AudioSource gameOverAudio;
 
-    [Header("UI – Herz")]
+    [Header("UI – Herz - BPM")]
     public TextMeshProUGUI heartRateText;         // für BPM-Anzeige
     public RectTransform heartIconTransform;      // fürs Pulsieren
     public float pulseAmplitude = 0.1f;           // Max-Skalierungs-Abweichung
     [SerializeField] private AudioSource heartbeatAudio;
     private float previousSin = 0f;
+
+    [Header("Name Input")]
 
     [SerializeField] private GameObject nameInputPanel; // Panel für Nameingabe
     [SerializeField] private TMP_InputField nameInputField; // InputField für Namen
@@ -52,6 +58,9 @@ public class GameManager : MonoBehaviour
     public void AddScore(int amount)
     {
         score += amount;
+
+        scoreAudio?.Play();
+
         // Score-UI updaten
         UpdateUI();
 
@@ -109,6 +118,8 @@ public class GameManager : MonoBehaviour
     {
         // Game Over-Logik
         Debug.Log("Game Over");
+
+        gameOverAudio?.Play();
 
         // Pacman stoppen
         GameObject pacman = GameObject.FindWithTag("Player");
