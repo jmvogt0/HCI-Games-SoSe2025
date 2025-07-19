@@ -30,9 +30,15 @@ public class GameManager : MonoBehaviour
 
     [Header("User Battery")]
 
-    [SerializeField] private Image batteryImage; // UI-Element für die Batterieanzeige
-    [SerializeField] private float batteryDrainRate = 0.1f; // Rate, mit der die Batterie entladen wird
-    private float batteryLevel = 1f; // 100% Batterie
+    [SerializeField] private Image batteryImage;
+    [SerializeField] private float batteryChargeRate = 0.2f;   // Aufladung je nach HRR
+    [SerializeField] private float batteryCapacity = 1f;       // Maximale Batterieladung (0–1 normalisieren)
+    [SerializeField] private TextMeshProUGUI batteryText;
+    private float batteryLevel = 0f;                           // Aktueller Ladezustand (0–batteryCapacity)
+
+    public float GetBatteryLevelNormalized() => Mathf.Clamp01(batteryLevel / batteryCapacity);
+
+    
 
     void Awake()
     {
@@ -59,6 +65,28 @@ public class GameManager : MonoBehaviour
 
         // Herz-Icon pulsieren lassen
         AnimateHeartIcon();
+
+        ChargeBattery();
+    }
+
+    private void ChargeBattery()
+    {
+        if (HeartRateManager.Instance == null)
+            return;
+
+        float hrr = HeartRateManager.Instance.GetHRRPercent(); // 0–1
+        float chargeAmount = hrr * batteryChargeRate * Time.deltaTime;
+
+        batteryLevel += chargeAmount;
+        batteryLevel = Mathf.Clamp(batteryLevel, 0f, batteryCapacity);
+
+        if (batteryImage != null)
+            batteryImage.fillAmount = GetBatteryLevelNormalized();
+            
+        if (batteryText != null)
+        {
+            batteryText.text = $"Battery: {(batteryLevel / batteryCapacity * 100f):F0}%";
+        }
     }
 
     public void AddScore(int amount)

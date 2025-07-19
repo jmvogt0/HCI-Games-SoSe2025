@@ -29,7 +29,6 @@ public class FirstPersonGridMovement : MonoBehaviour
 
   void Update()
   {
-    UpdateMoveSpeedFromHeartRate();
     UpdateSpeedUI();
     //Debug.Log("MoveSpeed: " + moveSpeed);
     if (!isMoving && !isRotating)
@@ -192,20 +191,6 @@ public class FirstPersonGridMovement : MonoBehaviour
       return new Vector3(0, 0, Mathf.Sign(d.z));
   }
 
-  void UpdateMoveSpeedFromHeartRate()
-  {
-    if (HeartRateManager.Instance == null)
-      return;
-
-    float hrr = HeartRateManager.Instance.GetHRRPercent(); // 0–1
-
-    // Beispiel: Linearer Mapping zwischen 3 (langsam) und 8 (schnell)
-    float minSpeed = 1f;
-    float maxSpeed = 5f;
-
-    moveSpeed = Mathf.Lerp(minSpeed, maxSpeed, hrr);
-  }
-
   // Neu hinzugefügt für GhostMovement
   /// <summary>
   /// Gibt die aktuelle Bewegungs-/Blickrichtung auf dem Gitter zurück.
@@ -235,7 +220,7 @@ public class FirstPersonGridMovement : MonoBehaviour
   {
     // Hier stellst du die Bewegungsgeschwindigkeit wieder auf den aktuellen Wert ein,
     // damit Pacman sich wieder bewegen kann.
-    UpdateMoveSpeedFromHeartRate();
+    moveSpeed = 1f;
     inputEnabled = true;
   }
 
