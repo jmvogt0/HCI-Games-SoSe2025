@@ -5146,9 +5146,12 @@ MonoBehaviour:
   nameInputPanel: {fileID: 427560255}
   nameInputField: {fileID: 1005071049}
   batteryImage: {fileID: 448103654}
-  batteryChargeRate: 2
+  batteryChargeRate: 1.5
   batteryCapacity: 1
   batteryText: {fileID: 1533502468}
+  boostSpeed: 2
+  boostMinDuration: 2
+  boostMaxDuration: 6
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

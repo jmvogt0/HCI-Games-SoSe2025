@@ -38,7 +38,10 @@ public class GameManager : MonoBehaviour
 
     public float GetBatteryLevelNormalized() => Mathf.Clamp01(batteryLevel / batteryCapacity);
 
-    
+    [SerializeField] private float boostSpeed = 2.0f;
+    [SerializeField] private float boostMinDuration = 2f;
+    [SerializeField] private float boostMaxDuration = 6f;
+    private bool isBoostActive = false;
 
     void Awake()
     {
@@ -82,7 +85,7 @@ public class GameManager : MonoBehaviour
 
         if (batteryImage != null)
             batteryImage.fillAmount = GetBatteryLevelNormalized();
-            
+
         if (batteryText != null)
         {
             batteryText.text = $"Battery: {(batteryLevel / batteryCapacity * 100f):F0}%";
@@ -144,7 +147,7 @@ public class GameManager : MonoBehaviour
                 ghost.GetComponent<GhostMovement>().ResetAfterTeleport(new Vector3(13f, 0.8f, -13.5f), Quaternion.Euler(0, 0, 0), Vector3.right);
                 ghost.GetComponent<GhostMovement>().StopMovement();
             }
-             StartCoroutine(StartCountdown());
+            StartCoroutine(StartCountdown());
         }
     }
 
@@ -185,7 +188,7 @@ public class GameManager : MonoBehaviour
         // Score speichern
         ScoreManager.Instance.SaveScore(playerName, playerScore, date);
 
-         // GhostModeManager stoppen, bevor Szene gewechselt wird
+        // GhostModeManager stoppen, bevor Szene gewechselt wird
         GhostModeManager gmm = FindObjectOfType<GhostModeManager>();
         if (gmm != null)
         {
@@ -281,5 +284,40 @@ public class GameManager : MonoBehaviour
         {
             ghost.GetComponent<GhostMovement>().StartDelayedMovement();
         }
+    }
+
+    public void ActivateBoost()
+    {
+        if (isBoostActive || batteryLevel <= 0f)
+            return;
+
+        float normalizedBattery = GetBatteryLevelNormalized();
+
+        float boostDuration = Mathf.Lerp(boostMinDuration, boostMaxDuration, normalizedBattery);
+
+        StartCoroutine(BoostCoroutine(boostDuration));
+    }
+
+    private IEnumerator BoostCoroutine(float duration)
+    {
+        isBoostActive = true;
+
+        FirstPersonGridMovement controller = FindObjectOfType<FirstPersonGridMovement>();
+        if (controller != null)
+            controller.SetBoostSpeed(boostSpeed);
+
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        // Boost endet
+        if (controller != null)
+            controller.ResetToNormalSpeed();
+
+        batteryLevel = 0f; // Batterie entladen
+        isBoostActive = false;
     }
 }

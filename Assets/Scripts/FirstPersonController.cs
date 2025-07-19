@@ -6,7 +6,9 @@ public class FirstPersonGridMovement : MonoBehaviour
 {
   private bool inputEnabled = false;
   [Header("Speed Settings")]
-  public float moveSpeed = 5f;
+  public float moveSpeed = 1f;
+  private float baseSpeed = 1f;
+  private bool isBoosted = false;
   public float gridSize = 1f;
 
   private Vector3 targetPos;
@@ -106,6 +108,7 @@ public class FirstPersonGridMovement : MonoBehaviour
       //Debug.Log("PowerDot collected!");
       // Score erhöhen
       GameManager.Instance.AddScore(50);
+      GameManager.Instance.ActivateBoost();
       // PowerDot entfernen
       Destroy(other.gameObject);
     }
@@ -190,11 +193,17 @@ public class FirstPersonGridMovement : MonoBehaviour
     else
       return new Vector3(0, 0, Mathf.Sign(d.z));
   }
+  public void SetBoostSpeed(float newSpeed)
+  {
+    isBoosted = true;
+    moveSpeed = newSpeed;
+  }
 
-  // Neu hinzugefügt für GhostMovement
-  /// <summary>
-  /// Gibt die aktuelle Bewegungs-/Blickrichtung auf dem Gitter zurück.
-  /// </summary>
+  public void ResetToNormalSpeed()
+  {
+    isBoosted = false;
+    moveSpeed = baseSpeed;
+  }
   public Vector3 GetCurrentDirection()
   {
     Vector3 dir = RoundToGrid(transform.forward);
@@ -221,6 +230,7 @@ public class FirstPersonGridMovement : MonoBehaviour
     // Hier stellst du die Bewegungsgeschwindigkeit wieder auf den aktuellen Wert ein,
     // damit Pacman sich wieder bewegen kann.
     moveSpeed = 1f;
+    baseSpeed = moveSpeed; // Speichere die Basisgeschwindigkeit
     inputEnabled = true;
   }
 
