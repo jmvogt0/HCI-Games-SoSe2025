@@ -43,6 +43,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float boostMaxDuration = 6f;
     private bool isBoostActive = false;
 
+    [Header("Battery UI Colors")]
+    [SerializeField] private Color batteryNormalColor = Color.white;
+    [SerializeField] private Color batteryBoostColor = Color.cyan;
+
     void Awake()
     {
         if (Instance == null)
@@ -302,6 +306,9 @@ public class GameManager : MonoBehaviour
     {
         isBoostActive = true;
 
+        if (batteryImage != null)
+            batteryImage.color = batteryBoostColor;
+
         FirstPersonGridMovement controller = FindObjectOfType<FirstPersonGridMovement>();
         if (controller != null)
             controller.SetBoostSpeed(boostSpeed);
@@ -340,5 +347,8 @@ public class GameManager : MonoBehaviour
 
         if (batteryText != null)
             batteryText.text = "Battery: 0%";
+
+        if (batteryImage != null)
+            batteryImage.color = batteryNormalColor;
     }
 }
