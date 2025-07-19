@@ -4827,7 +4827,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   wallPrefab: {fileID: 8465946156559165193, guid: 1fdb9a2e4e9ee438ea92766405abb7bb, type: 3}
   dotPrefab: {fileID: 4645564371910050765, guid: b80a8a968dc9f4a358e2e7e76a947a25, type: 3}
-  powerDotPrefab: {fileID: 4645564371910050765, guid: b80a8a968dc9f4a358e2e7e76a947a25, type: 3}
+  powerDotPrefab: {fileID: 3356425185146270009, guid: d1b8f41aed6054f63b44d57016c7977e, type: 3}
   floorPrefab: {fileID: 1717267999310666011, guid: 67c0e0e7ade174158a31d2746773c6d3, type: 3}
   levelText: "WWWWWWWWWWWWWWWWWWWWWWWWWWWW\nW............WW............W\nW.WWWW.WWWWW.WW.WWWWW.WWWW.W\nW*WWWW.WWWWW.WW.WWWWW.WWWW*W\nW.WWWW.WWWWW.WW.WWWWW.WWWW.W\nW..........................W\nW.WWWW.WW.WWWWWWWW.WW.WWWW.W\nW.WWWW.WW.WWWWWWWW.WW.WWWW.W\nW......WW....WW....WW......W\nWWWWWW.WWWWW
     WW WWWWW.WWWWWW\n     W.WWWWW WW WWWWW.W     \n     W.WW          WW.W     \n    

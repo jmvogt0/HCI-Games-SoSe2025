@@ -102,6 +102,14 @@ public class FirstPersonGridMovement : MonoBehaviour
       // Dot entfernen
       Destroy(other.gameObject);
     }
+    if (other.CompareTag("PowerDot"))
+    {
+      //Debug.Log("PowerDot collected!");
+      // Score erhöhen
+      GameManager.Instance.AddScore(50);
+      // PowerDot entfernen
+      Destroy(other.gameObject);
+    }
     if (other.CompareTag("TeleportLeft"))
     {
       // Teleport zur rechten Seite

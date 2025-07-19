@@ -28,6 +28,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject nameInputPanel; // Panel für Nameingabe
     [SerializeField] private TMP_InputField nameInputField; // InputField für Namen
 
+    [Header("User Battery")]
+
+    [SerializeField] private Image batteryImage; // UI-Element für die Batterieanzeige
+    [SerializeField] private float batteryDrainRate = 0.1f; // Rate, mit der die Batterie entladen wird
+    private float batteryLevel = 1f; // 100% Batterie
+
     void Awake()
     {
         if (Instance == null)

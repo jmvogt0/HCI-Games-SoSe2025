@@ -9,6 +9,7 @@ TagManager:
   - TeleportRight
   - Ghost
   - TunnelZone
+  - PowerDot
   layers:
   - Default
   - TransparentFX
