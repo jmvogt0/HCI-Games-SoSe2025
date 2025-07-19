@@ -306,10 +306,24 @@ public class GameManager : MonoBehaviour
         if (controller != null)
             controller.SetBoostSpeed(boostSpeed);
 
+        float startBattery = batteryLevel;
         float elapsed = 0f;
+
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
+
+            // Batterie visuell & intern entladen
+            float normalized = Mathf.Clamp01(1f - (elapsed / duration));
+            batteryLevel = startBattery * normalized;
+
+            // UI aktualisieren
+            if (batteryImage != null)
+                batteryImage.fillAmount = batteryLevel / batteryCapacity;
+
+            if (batteryText != null)
+                batteryText.text = $"Battery: {(batteryLevel / batteryCapacity * 100f):F0}%";
+
             yield return null;
         }
 
@@ -317,7 +331,14 @@ public class GameManager : MonoBehaviour
         if (controller != null)
             controller.ResetToNormalSpeed();
 
-        batteryLevel = 0f; // Batterie entladen
+        batteryLevel = 0f;
         isBoostActive = false;
+
+        // UI nochmal sauber zurücksetzen
+        if (batteryImage != null)
+            batteryImage.fillAmount = 0f;
+
+        if (batteryText != null)
+            batteryText.text = "Battery: 0%";
     }
 }
