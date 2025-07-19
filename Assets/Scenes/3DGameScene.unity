@@ -825,8 +825,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62c133eebcb2342efba9420f8becd4ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalSpeed: 1.5
-  tunnelSpeed: 1
+  normalSpeed: 1.25
+  tunnelSpeed: 0.75
   wallLayerMask:
     serializedVersion: 2
     m_Bits: 64
@@ -3755,8 +3755,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62c133eebcb2342efba9420f8becd4ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalSpeed: 1.5
-  tunnelSpeed: 1
+  normalSpeed: 1.25
+  tunnelSpeed: 0.75
   wallLayerMask:
     serializedVersion: 2
     m_Bits: 64
@@ -4298,8 +4298,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62c133eebcb2342efba9420f8becd4ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalSpeed: 1.5
-  tunnelSpeed: 1
+  normalSpeed: 1.25
+  tunnelSpeed: 0.75
   wallLayerMask:
     serializedVersion: 2
     m_Bits: 64
@@ -4407,8 +4407,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62c133eebcb2342efba9420f8becd4ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalSpeed: 1.5
-  tunnelSpeed: 1
+  normalSpeed: 1.25
+  tunnelSpeed: 0.75
   wallLayerMask:
     serializedVersion: 2
     m_Bits: 64
@@ -5151,7 +5151,9 @@ MonoBehaviour:
   batteryText: {fileID: 1533502468}
   boostSpeed: 2
   boostMinDuration: 2
-  boostMaxDuration: 6
+  boostMaxDuration: 10
+  batteryNormalColor: {r: 1, g: 1, b: 1, a: 1}
+  batteryBoostColor: {r: 0, g: 1, b: 1, a: 1}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

@@ -5,8 +5,8 @@ using System.Collections;
 public class GhostMovement : MonoBehaviour
 {
   [Header("Speed Settings")]
-  public float normalSpeed = 5f;
-  public float tunnelSpeed = 3f;
+  public float normalSpeed = 1.25f;
+  public float tunnelSpeed = 0.75f;
 
   [Header("Wall Detection")]
   public LayerMask wallLayerMask;
