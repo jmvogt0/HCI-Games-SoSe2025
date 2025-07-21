@@ -17,6 +17,8 @@ public class HeartRateManager : MonoBehaviour
             DontDestroyOnLoad(gameObject);
             baseline = PlayerPrefs.GetInt("HR_Baseline", 60);
             maxHR = PlayerPrefs.GetInt("HR_Max", 190);
+
+            Debug.Log($"HeartRateManager initialized with Baseline: {baseline}, Max HR: {maxHR}");
         }
         else
         {
@@ -36,4 +38,16 @@ public class HeartRateManager : MonoBehaviour
         if (hrr <= 0) return 0;
         return Mathf.Clamp01((currentHR - baseline) / (float)hrr);
     }
+
+    public void SetBaseline(int newBaseline)
+    {
+        baseline = newBaseline;
+        Debug.Log($"Baseline aktualisiert: {baseline}");
+    }
+    public void SetMaxHR(int newMaxHR)
+    {
+        maxHR = newMaxHR;
+        Debug.Log($"Max HR aktualisiert: {maxHR}");
+    }
+
 }

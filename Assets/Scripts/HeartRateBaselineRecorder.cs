@@ -91,10 +91,8 @@ public class HeartRateBaselineRecorder : MonoBehaviour
 
     private void AnimateHeartIcon(int bpm)
     {
-        Debug.Log("AnimateHeartIcon called with BPM: " + bpm);
         if (heartIconTransform == null || bpm == null)
             return;
-        Debug.Log("HeartIconTransform and BPM are valid.");
 
         float pulseFreq = bpm / 60f; // Pulse pro Sekunde
 
@@ -125,8 +123,16 @@ public class HeartRateBaselineRecorder : MonoBehaviour
         heartRates.Sort();
         int median = heartRates[heartRates.Count / 2];
 
+        Debug.Log("Herzfrequenzdaten: " + string.Join(", ", heartRates));
+
         Debug.Log("Herzfrequenz-Baseline (Median): " + median);
         PlayerPrefs.SetInt("HR_Baseline", median); // für späteren Zugriff im Spiel
+        PlayerPrefs.Save();
+
+        if (HeartRateManager.Instance != null)
+        {
+            HeartRateManager.Instance.SetBaseline(median);
+        }
 
         SceneManager.LoadScene("3DGameScene"); // oder beliebige Szene
     }

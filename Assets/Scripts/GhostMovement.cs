@@ -60,17 +60,17 @@ public class GhostMovement : MonoBehaviour
 
   void OnTriggerEnter(Collider other)
   {
-    Debug.Log("Ghost " + mode + " entered trigger: " + other.name);
+    //Debug.Log("Ghost " + mode + " entered trigger: " + other.name);
     if (other.CompareTag("TunnelZone"))
       moveSpeed = tunnelSpeed;
     else if (other.CompareTag("TeleportLeft"))
     {
-      Debug.Log("Teleport Left Triggered");
+      //Debug.Log("Teleport Left Triggered");
       ResetAfterTeleport(new Vector3(24f, 0.6f, -14f), Quaternion.Euler(0, -90f, 0), Vector3.left);
     }
     else if (other.CompareTag("TeleportRight"))
     {
-      Debug.Log("Teleport Right Triggered");
+      //Debug.Log("Teleport Right Triggered");
       ResetAfterTeleport(new Vector3(3f, 0.6f, -14f), Quaternion.Euler(0, 90f, 0), Vector3.right);
     }
   }

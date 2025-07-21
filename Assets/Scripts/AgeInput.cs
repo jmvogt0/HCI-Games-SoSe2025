@@ -15,7 +15,7 @@ public class AgeInput : MonoBehaviour
             // HR-Wert im HeartRateManager speichern (muss in der Scene aktiv sein)
             if (HeartRateManager.Instance != null)
             {
-                HeartRateManager.Instance.maxHR = maxHR;
+                HeartRateManager.Instance.SetMaxHR(maxHR);
             }
 
             // Optional: Persistenz (z. B. wenn HeartRateManager in späterer Scene geladen wird)
