@@ -24,6 +24,10 @@ public class HeartRateBaselineRecorder : MonoBehaviour
 
     private int currentBPM = 0;
 
+
+    public GameObject NormalUI;
+    public GameObject ErrorUI;
+
     void Start()
     {
         timeRemaining = recordDuration;
@@ -43,7 +47,7 @@ public class HeartRateBaselineRecorder : MonoBehaviour
     {
         while (timeRemaining > 0)
         {
-            timerText.text = Mathf.CeilToInt(timeRemaining).ToString();
+            timerText.text = $"Messung endet in: {Mathf.CeilToInt(timeRemaining)}s";
             timeRemaining -= Time.deltaTime;
             yield return null;
         }
@@ -70,7 +74,7 @@ public class HeartRateBaselineRecorder : MonoBehaviour
     }
 
     private void AnimateHeartIcon(int bpm)
-    {   
+    {
         Debug.Log("AnimateHeartIcon called with BPM: " + bpm);
         if (heartIconTransform == null || bpm == null)
             return;
@@ -97,6 +101,8 @@ public class HeartRateBaselineRecorder : MonoBehaviour
         if (heartRates.Count == 0)
         {
             Debug.LogWarning("Keine Herzfrequenzdaten gesammelt.");
+            NormalUI.SetActive(false);
+            ErrorUI.SetActive(true);
             return;
         }
 
@@ -107,5 +113,15 @@ public class HeartRateBaselineRecorder : MonoBehaviour
         PlayerPrefs.SetInt("HR_Baseline", median); // für späteren Zugriff im Spiel
 
         SceneManager.LoadScene("3DGameScene"); // oder beliebige Szene
+    }
+    
+    public void RestartMeasurement()
+    {
+        NormalUI.SetActive(true);
+        ErrorUI.SetActive(false);
+        heartRates.Clear();
+        timeRemaining = recordDuration;
+        isRecording = true;
+        StartCoroutine(Countdown());
     }
 }

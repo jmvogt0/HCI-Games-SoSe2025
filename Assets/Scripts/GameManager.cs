@@ -26,6 +26,8 @@ public class GameManager : MonoBehaviour
     [Header("Name Input")]
 
     [SerializeField] private GameObject nameInputPanel; // Panel für Nameingabe
+
+    [SerializeField] private GameObject ingameUi; // Panel für In-Game UI
     [SerializeField] private TMP_InputField nameInputField; // InputField für Namen
 
     [Header("User Battery")]
@@ -177,6 +179,7 @@ public class GameManager : MonoBehaviour
         }
 
         nameInputPanel.SetActive(true);
+        ingameUi.SetActive(false);
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
@@ -186,7 +189,7 @@ public class GameManager : MonoBehaviour
     public void OnSubmitName()
     {
         string playerName = nameInputField.text;
-        string date = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm");
+        string date = System.DateTime.Now.ToString("o"); // = ISO 8601
         int playerScore = score;
 
         // Score speichern

@@ -61,4 +61,13 @@ public class ScoreManager : MonoBehaviour
         string json = File.ReadAllText(savePath);
         return JsonUtility.FromJson<ScoreList>(json);
     }
+
+    public void DeleteAllScores()
+    {
+        if (File.Exists(savePath))
+        {
+            File.Delete(savePath);
+            Debug.Log("Alle Scores wurden gelöscht.");
+        }
+    }
 }
