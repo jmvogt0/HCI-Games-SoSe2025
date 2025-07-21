@@ -16,6 +16,7 @@ public class HeartRateManager : MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(gameObject);
             baseline = PlayerPrefs.GetInt("HR_Baseline", 60);
+            maxHR = PlayerPrefs.GetInt("HR_Max", 190);
         }
         else
         {

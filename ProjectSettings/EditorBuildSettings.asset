@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: f113f5d4aaff649ac852a9c1d401e78b
   - enabled: 1
+    path: Assets/Scenes/AgeInputScene.unity
+    guid: 415b386d9c9874ec98a9ac9a2f91899c
+  - enabled: 1
     path: Assets/Scenes/HeartRateBaseline.unity
     guid: 40a7120a536994737a19d23719c3aeb0
   - enabled: 1
