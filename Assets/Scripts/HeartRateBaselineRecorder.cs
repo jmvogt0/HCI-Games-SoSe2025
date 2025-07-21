@@ -27,11 +27,16 @@ public class HeartRateBaselineRecorder : MonoBehaviour
 
     public GameObject NormalUI;
     public GameObject ErrorUI;
+    private AudioSource musicSource;
 
     void Start()
     {
         timeRemaining = recordDuration;
         isRecording = true;
+
+        if (MenuMusicManager.Instance != null)
+            musicSource = MenuMusicManager.Instance.musicSource;
+
         StartCoroutine(Countdown());
     }
 
@@ -48,9 +53,20 @@ public class HeartRateBaselineRecorder : MonoBehaviour
         while (timeRemaining > 0)
         {
             timerText.text = $"Messung endet in: {Mathf.CeilToInt(timeRemaining)}s";
+
+            float fadeStart = 5f;
+            if (musicSource != null && timeRemaining <= fadeStart)
+            {
+                float t = Mathf.Clamp01(timeRemaining / fadeStart); // 1 → 0
+                musicSource.volume = Mathf.Lerp(0f, 0.15f, t); // 0.15 → 0.0
+            }
+
             timeRemaining -= Time.deltaTime;
             yield return null;
         }
+
+        if (musicSource != null)
+            musicSource.volume = 0f; // Absicherung
 
         isRecording = false;
         FinishMeasurement();
@@ -114,7 +130,7 @@ public class HeartRateBaselineRecorder : MonoBehaviour
 
         SceneManager.LoadScene("3DGameScene"); // oder beliebige Szene
     }
-    
+
     public void RestartMeasurement()
     {
         NormalUI.SetActive(true);
