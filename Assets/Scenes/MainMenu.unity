@@ -304,7 +304,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30966ff3a099f418ea1694c82cd37821, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseline: 60
+  baseline: 80
   currentHR: 60
   maxHR: 198
 --- !u!4 &1195340999

@@ -995,7 +995,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62c133eebcb2342efba9420f8becd4ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalSpeed: 1.25
+  normalSpeed: 1
   tunnelSpeed: 0.75
   wallLayerMask:
     serializedVersion: 2
@@ -1875,6 +1875,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Ghost
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 96c4fd9bbbf644bde9ab2241fe06d0a9, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2638,8 +2642,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -48, y: 0}
-  m_SizeDelta: {x: 96, y: 96}
+  m_AnchoredPosition: {x: -64, y: 0}
+  m_SizeDelta: {x: 128, y: 96}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1269863175
 MonoBehaviour:
@@ -2661,7 +2665,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 60
+  m_text: 160
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 95799928a868f4904b81a01a96b4f3d6, type: 2}
   m_sharedMaterial: {fileID: 356308760505156227, guid: 95799928a868f4904b81a01a96b4f3d6, type: 2}
@@ -2695,7 +2699,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 2
+  m_HorizontalAlignment: 4
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -3539,7 +3543,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62c133eebcb2342efba9420f8becd4ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalSpeed: 1.25
+  normalSpeed: 1
   tunnelSpeed: 0.75
   wallLayerMask:
     serializedVersion: 2
@@ -4134,7 +4138,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62c133eebcb2342efba9420f8becd4ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalSpeed: 1.25
+  normalSpeed: 1
   tunnelSpeed: 0.75
   wallLayerMask:
     serializedVersion: 2
@@ -4243,7 +4247,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62c133eebcb2342efba9420f8becd4ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalSpeed: 1.25
+  normalSpeed: 1
   tunnelSpeed: 0.75
   wallLayerMask:
     serializedVersion: 2
@@ -4554,7 +4558,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: -20, y: 56}
-  m_SizeDelta: {x: 200, y: 50}
+  m_SizeDelta: {x: 250, y: 50}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &1822361576
 MonoBehaviour:
@@ -5109,7 +5113,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3686d0659bf9c40a6bd108424956df59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerLives: 1
+  playerLives: 3
   countdownText: {fileID: 1321123154}
   lifeHearts:
   - {fileID: 652651874}
@@ -5127,7 +5131,7 @@ MonoBehaviour:
   ingameUi: {fileID: 1827391914}
   nameInputField: {fileID: 2047599069}
   batteryImage: {fileID: 448103654}
-  batteryChargeRate: 1.5
+  batteryChargeRate: 0.3
   batteryCapacity: 1
   batteryText: {fileID: 1533502468}
   boostSpeed: 2

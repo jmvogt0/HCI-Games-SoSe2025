@@ -84,7 +84,10 @@ public class GameManager : MonoBehaviour
             return;
 
         float hrr = HeartRateManager.Instance.GetHRRPercent(); // 0–1
+        //Debug.Log($"HRR: {hrr}");
+        
         float chargeAmount = hrr * batteryChargeRate * Time.deltaTime;
+        //Debug.Log($"Charging battery by: {chargeAmount}");
 
         batteryLevel += chargeAmount;
         batteryLevel = Mathf.Clamp(batteryLevel, 0f, batteryCapacity);

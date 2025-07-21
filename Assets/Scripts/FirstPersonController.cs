@@ -32,6 +32,7 @@ public class FirstPersonGridMovement : MonoBehaviour
   void Update()
   {
     UpdateSpeedUI();
+    UpdateMoveSpeedFromHeartRate();
     //Debug.Log("MoveSpeed: " + moveSpeed);
     if (!isMoving && !isRotating)
     {
@@ -215,6 +216,20 @@ public class FirstPersonGridMovement : MonoBehaviour
     if (speedText != null)
       speedText.text = $"Speed: {moveSpeed:F1}";
   }
+
+   void UpdateMoveSpeedFromHeartRate()
+  {
+    if (HeartRateManager.Instance == null || isBoosted)
+      return;
+
+    float hrr = HeartRateManager.Instance.GetHRRPercent(); // 0–1
+
+    // Beispiel: Linearer Mapping zwischen 3 (langsam) und 8 (schnell)
+    float minSpeed = 1f;
+    float maxSpeed = 5f;
+
+    moveSpeed = Mathf.Lerp(minSpeed, maxSpeed, hrr);
+  }
   public void StopMovement()
   {
     isMoving = false;
@@ -229,7 +244,7 @@ public class FirstPersonGridMovement : MonoBehaviour
   {
     // Hier stellst du die Bewegungsgeschwindigkeit wieder auf den aktuellen Wert ein,
     // damit Pacman sich wieder bewegen kann.
-    moveSpeed = 1f;
+    UpdateMoveSpeedFromHeartRate();
     baseSpeed = moveSpeed; // Speichere die Basisgeschwindigkeit
     inputEnabled = true;
   }

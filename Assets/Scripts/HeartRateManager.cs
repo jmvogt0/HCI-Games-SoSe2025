@@ -31,6 +31,7 @@ public class HeartRateManager : MonoBehaviour
 
     public float GetHRRPercent()
     {
+        //Debug.Log($"Current HR: {currentHR}, Baseline: {baseline}, Max HR: {maxHR}");
         float hrr = maxHR - baseline;
         if (hrr <= 0) return 0;
         return Mathf.Clamp01((currentHR - baseline) / (float)hrr);

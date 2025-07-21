@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5811710059470634005}
   - component: {fileID: 8758015482450945299}
   - component: {fileID: 192947618142214018}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: PowerDot
   m_TagString: PowerDot
   m_Icon: {fileID: 0}

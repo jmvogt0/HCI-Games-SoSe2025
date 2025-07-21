@@ -59,7 +59,7 @@ public class ScoreboardManager : MonoBehaviour
     public void QuitGame()
     {
         //Application.Quit();
-        SceneManager.LoadScene("MainMenuScene");
+        SceneManager.LoadScene("MainMenu");
         Debug.Log("Spiel wurde beendet.");
     }
 }
