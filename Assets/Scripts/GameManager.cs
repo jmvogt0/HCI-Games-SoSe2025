@@ -114,21 +114,13 @@ public class GameManager : MonoBehaviour
         CheckForWin();
     }
 
-    // 1. Prüft, ob noch Objekte mit Tag "Dot" existieren
     private void CheckForWin()
     {
         // FindGameObjects… liefert alle GameObjects mit Tag
         if (GameObject.FindGameObjectsWithTag("Dot").Length == 0)
         {
-            OnAllDotsCollected();
+            GameOver();
         }
-    }
-
-    // 2. Gewinnzustand behandeln
-    private void OnAllDotsCollected()
-    {
-        Debug.Log("Gewonnen! Alle Dots gesammelt.");
-        // SceneManager.LoadScene("WinScene");
     }
 
     public void LoseLife()
