@@ -7,7 +7,10 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
     public int playerLives = 3;
+
+    public AudioSource loseLifeAudio; // Audio für Leben verlieren
     public TextMeshProUGUI countdownText; // UI-Element für den Countdown
+    public AudioSource countdownAudio; // Audio für Countdown
     public Image[] lifeHearts; // UI für Leben
 
     [Header("Score")]
@@ -15,6 +18,7 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI scoreText;
     [SerializeField] private AudioSource scoreAudio;
     [SerializeField] private AudioSource gameOverAudio;
+    [SerializeField] private AudioSource gameWinAudio;
 
     [Header("UI – Herz - BPM")]
     public TextMeshProUGUI heartRateText;         // für BPM-Anzeige
@@ -119,21 +123,24 @@ public class GameManager : MonoBehaviour
         // FindGameObjects… liefert alle GameObjects mit Tag
         if (GameObject.FindGameObjectsWithTag("Dot").Length == 0)
         {
+            gameWinAudio?.Play();
             GameOver();
         }
     }
 
-    public void LoseLife()
+    public IEnumerator LoseLife()
     {
         playerLives--;
         GameObject pacman = GameObject.FindWithTag("Player");
 
         if (playerLives <= 0)
         {
+            gameOverAudio?.Play();
             GameOver();
         }
         else
         {
+            loseLifeAudio?.Play();
             // Respawn-Logik oder Level neu laden
             Debug.Log("Player respawned. Lives left: " + playerLives);
             //pacman.transform.position = playerSpawnPoint.position; // Spieler zurück zum Spawnpunkt teleportieren
@@ -148,6 +155,7 @@ public class GameManager : MonoBehaviour
                 ghost.GetComponent<GhostMovement>().ResetAfterTeleport(new Vector3(13f, 0.8f, -13.5f), Quaternion.Euler(0, 0, 0), Vector3.right);
                 ghost.GetComponent<GhostMovement>().StopMovement();
             }
+            yield return new WaitForSeconds(2);
             StartCoroutine(StartCountdown());
         }
     }
@@ -156,8 +164,6 @@ public class GameManager : MonoBehaviour
     {
         // Game Over-Logik
         Debug.Log("Game Over");
-
-        gameOverAudio?.Play();
 
         // Pacman stoppen
         GameObject pacman = GameObject.FindWithTag("Player");
@@ -258,6 +264,7 @@ public class GameManager : MonoBehaviour
         countdownText.gameObject.SetActive(true);
 
         int countdown = 3;
+        countdownAudio?.Play(); // Countdown-Sound abspielen
         while (countdown > 0)
         {
             countdownText.text = countdown.ToString();

@@ -130,7 +130,7 @@ public class FirstPersonGridMovement : MonoBehaviour
     if (other.gameObject.CompareTag("Ghost"))
     {
       Debug.Log("Kontakt mit Geist!");
-      GameManager.Instance.LoseLife();
+      StartCoroutine(GameManager.Instance.LoseLife());
       // Optional: Pacman "resetten" oder sterben lassen
       // z. B. zurück zur Startposition
       // transform.position = GameManager.Instance.GetPacmanStartPosition();
