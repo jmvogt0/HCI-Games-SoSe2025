@@ -5,7 +5,6 @@ using UnityEngine.UI;
 using TMPro;
 using System.Linq;
 using UnityEngine.SceneManagement;
-using System.Collections;
 
 public class HeartRateBaselineRecorder : MonoBehaviour
 {
@@ -91,7 +90,7 @@ public class HeartRateBaselineRecorder : MonoBehaviour
 
     private void AnimateHeartIcon(int bpm)
     {
-        if (heartIconTransform == null || bpm == null)
+        if (heartIconTransform == null || bpm == 0)
             return;
 
         float pulseFreq = bpm / 60f; // Pulse pro Sekunde
