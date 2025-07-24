@@ -168,6 +168,12 @@ public class FirstPersonGridMovement : MonoBehaviour
       Debug.Log("Keyboard/Legacy Controller Right - Pending turn set to 1");
       pendingTurn = 1;
     }
+    float verticalInput = Input.GetAxis("Vertical");
+    if (verticalInput < -0.5f)
+    {
+        Debug.Log("Stick oder Taste S nach unten – PendingFlip");
+        pendingFlip = true;
+    }
 
     if (Keyboard.current != null)
     {
