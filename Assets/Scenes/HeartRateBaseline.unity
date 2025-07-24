@@ -538,7 +538,7 @@ MonoBehaviour:
   pulseAmplitude: 0.1
   heartbeatAudio: {fileID: 1937909337}
   timerText: {fileID: 64955638}
-  recordDuration: 10
+  recordDuration: 60
   NormalUI: {fileID: 108298866}
   ErrorUI: {fileID: 1034738973}
 --- !u!4 &392561670
