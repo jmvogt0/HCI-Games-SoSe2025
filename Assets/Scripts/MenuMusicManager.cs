@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 public class MenuMusicManager : MonoBehaviour
 {
     public static MenuMusicManager Instance;
@@ -15,6 +16,29 @@ public class MenuMusicManager : MonoBehaviour
         else
         {
             Destroy(gameObject); // andere Instanzen vermeiden
+        }
+    }
+    void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == "MainMenu")
+        {
+            if (!musicSource.isPlaying)
+                musicSource.Play();
+
+            musicSource.Stop();
+            musicSource.Play();
+            musicSource.volume = 0.15f;
+            
         }
     }
 }
